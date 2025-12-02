@@ -1,9 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { NoteTemplate, Category } from './types';
 import { TemplateCard } from './components/TemplateCard';
-import { generateBankComment } from './services/geminiService';
 import { 
-  Sparkles, 
   ShieldCheck, 
   ArrowLeft,
   Building2,
@@ -183,15 +181,9 @@ const normalizeText = (text: string) => {
 };
 
 function App() {
-  const [activeTab, setActiveTab] = useState<'templates' | 'generator'>('templates');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   
-  // Generator State
-  const [genScenario, setGenScenario] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedResult, setGeneratedResult] = useState('');
-
   // Search Logic (Smart Filtering)
   const searchResults = useMemo(() => {
     if (!searchQuery.trim()) return [];
@@ -223,30 +215,13 @@ function App() {
     ? INITIAL_TEMPLATES.filter(t => t.categoryId === selectedCategory)
     : [];
 
-  const handleGenerate = async () => {
-    if (!genScenario.trim()) return;
-    
-    setIsGenerating(true);
-    setGeneratedResult('');
-    
-    try {
-      const result = await generateBankComment(genScenario);
-      setGeneratedResult(result);
-    } catch (error) {
-      console.error(error);
-      setGeneratedResult("Erro ao gerar comentário. Tente novamente.");
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
   const activeCategoryData = CATEGORIES.find(c => c.id === selectedCategory);
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 pb-20 font-sans relative selection:bg-blue-100 selection:text-blue-900">
       
       {/* Background Image - Only on Initial Dashboard (and when not searching) */}
-      {activeTab === 'templates' && !selectedCategory && !searchQuery && (
+      {!selectedCategory && !searchQuery && (
         <div 
           className="fixed inset-0 z-0 transition-opacity duration-700 ease-in-out pointer-events-none"
           style={{
@@ -290,33 +265,6 @@ function App() {
               )}
             </div>
           </div>
-
-          <nav className="flex gap-1 bg-slate-100 p-1 rounded-lg flex-shrink-0">
-            <button
-              onClick={() => {
-                setActiveTab('templates');
-                setSelectedCategory(null);
-                setSearchQuery('');
-              }}
-              className={`px-3 sm:px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
-                activeTab === 'templates' 
-                  ? 'bg-white text-blue-700 shadow-sm' 
-                  : 'text-slate-500 hover:text-slate-700'
-              }`}
-            >
-              Modelos
-            </button>
-            <button
-              onClick={() => setActiveTab('generator')}
-              className={`px-3 sm:px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
-                activeTab === 'generator' 
-                  ? 'bg-white text-blue-700 shadow-sm' 
-                  : 'text-slate-500 hover:text-slate-700'
-              }`}
-            >
-              Gerador IA
-            </button>
-          </nav>
         </div>
       </header>
 
@@ -350,7 +298,7 @@ function App() {
         )}
 
         {/* VIEW: CATEGORY DASHBOARD (Only if NOT searching and NO category selected) */}
-        {activeTab === 'templates' && !selectedCategory && !searchQuery && (
+        {!selectedCategory && !searchQuery && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="mb-8 text-center bg-white/60 p-6 rounded-2xl backdrop-blur-sm shadow-sm border border-white/50">
               <h2 className="text-2xl font-bold text-slate-800 mb-2">Comentário Banco</h2>
@@ -385,7 +333,7 @@ function App() {
         )}
 
         {/* VIEW: TEMPLATE LIST (Only if NOT searching and category IS selected) */}
-        {activeTab === 'templates' && selectedCategory && activeCategoryData && !searchQuery && (
+        {selectedCategory && activeCategoryData && !searchQuery && (
           <div className="animate-in fade-in slide-in-from-right-8 duration-300">
             <div className="mb-6 flex items-center gap-4">
               <button 
@@ -411,79 +359,6 @@ function App() {
               {categoryTemplates.length === 0 && (
                 <div className="text-center py-12 bg-white rounded-xl border border-dashed border-slate-300">
                   <p className="text-slate-400">Nenhum modelo encontrado nesta categoria.</p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* VIEW: AI GENERATOR */}
-        {activeTab === 'generator' && (
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 animate-in fade-in zoom-in-95 duration-300">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg text-white">
-                <Sparkles size={24} />
-              </div>
-              <div>
-                <h2 className="text-xl font-bold text-slate-800">Gerador Inteligente</h2>
-                <p className="text-sm text-slate-500">Crie novos comentários bancários com IA</p>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Descreva a situação:
-                </label>
-                <textarea
-                  className="w-full p-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-[120px] text-slate-700 placeholder-slate-400"
-                  placeholder="Ex: Criar nota de recusa por falta de assinatura do cônjuge no contrato de compra e venda..."
-                  value={genScenario}
-                  onChange={(e) => setGenScenario(e.target.value)}
-                />
-              </div>
-
-              <button
-                onClick={handleGenerate}
-                disabled={isGenerating || !genScenario.trim()}
-                className={`
-                  w-full py-3 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all
-                  ${isGenerating || !genScenario.trim()
-                    ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
-                    : 'bg-blue-600 text-white hover:bg-blue-700 shadow-md hover:shadow-lg'
-                  }
-                `}
-              >
-                {isGenerating ? (
-                  <>
-                    <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Gerando...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles size={18} />
-                    Gerar Comentário
-                  </>
-                )}
-              </button>
-
-              {generatedResult && (
-                <div className="mt-8 pt-6 border-t border-slate-100 animate-in slide-in-from-bottom-2">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Resultado Gerado</span>
-                  </div>
-                  <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 mb-4">
-                    <pre className="whitespace-pre-wrap font-mono text-sm text-slate-700">{generatedResult}</pre>
-                  </div>
-                  <TemplateCard 
-                    template={{
-                      id: 'gen-temp',
-                      categoryId: 'gen',
-                      title: 'Resultado da IA',
-                      category: 'general',
-                      message: generatedResult
-                    }} 
-                  />
                 </div>
               )}
             </div>
