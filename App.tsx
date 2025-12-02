@@ -238,6 +238,24 @@ OBS.: Após aprovação, nos retornar para o avanço da fase. Gentileza “ fleg
 Grato.`
     }
   },
+  {
+    id: 'email-3',
+    categoryId: 'emails',
+    title: 'INDISPONIBILIDADE DE BENS',
+    category: 'email',
+    emailData: {
+      to: 'cioperacoesfinanceiroacc@santander.com.br',
+      subject: 'MARIA DA SILVA | INDISPONIBILIDADE DE BENS | PROPOSTA XX.XXX.XXX | CONTRATO 00XXXXXXXX',
+      body: `Bom dia!
+ 
+A proposta informada, apresentou INDISPONIBILIDADE DE BENS conforme AV nº xx na matrícula XX.XXX (no anexo) portanto aguardamos um parecer para prosseguirmos neste caso. 
+
+
+No anexo, segue a matrícula com informação constante na mesma. 
+ 
+Informamos que a proposta se encontra em pausa para avanço até a segunda ordem.`
+    }
+  },
 
   // --- TABELA CATEGORY ---
   {
