@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NoteTemplate } from '../types';
 import { CopyButton } from './CopyButton';
-import { FileText, Trash2, CheckCircle, XCircle, Square, CheckSquare, Building2 } from 'lucide-react';
+import { FileText, Trash2, CheckCircle, XCircle, Square, CheckSquare, Building2, Mail, ExternalLink } from 'lucide-react';
 
 interface TemplateCardProps {
   template: NoteTemplate;
@@ -10,11 +10,14 @@ interface TemplateCardProps {
 
 export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }) => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  // Initialize recipients with template default if available
+  const [recipients, setRecipients] = useState(template.emailData?.to || '');
   const [imageErrors, setImageErrors] = useState<Record<number, boolean>>({});
 
   const isRejection = template.category === 'rejection';
   const hasMultiSelect = template.multiSelectOptions && template.multiSelectOptions.length > 0;
   const hasTable = template.tableData && template.tableData.length > 0;
+  const isEmail = template.category === 'email' && !!template.emailData;
 
   // Toggle selection logic
   const toggleOption = (option: string) => {
@@ -29,6 +32,17 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
     setImageErrors(prev => ({ ...prev, [index]: true }));
   };
 
+  const handleOpenOutlook = () => {
+    if (!template.emailData) return;
+    
+    const subject = encodeURIComponent(template.emailData.subject);
+    const body = encodeURIComponent(template.emailData.body);
+    const to = recipients; // Basicamente passa a string digitada (ex: a@a.com; b@b.com)
+    
+    // mailto link construction
+    window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+  };
+
   // Determine styles based on category
   const subtitleStyles = isRejection 
     ? 'bg-red-50 border-red-100 text-red-800'
@@ -37,8 +51,8 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
   const SubtitleIcon = isRejection ? XCircle : CheckCircle;
   const iconColor = isRejection ? 'text-red-600' : 'text-green-600';
 
-  // Construct final text (Only relevant if NOT a table)
-  let finalMessageBody = template.message;
+  // Construct final text (Only relevant if NOT a table and NOT email)
+  let finalMessageBody = template.message || "";
   let fullTextToCopy = "";
   
   if (hasMultiSelect) {
@@ -56,22 +70,35 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
     fullTextToCopy = template.subtitle 
       ? `${template.subtitle}\n\n${finalMessageBody}` 
       : finalMessageBody;
-  } else if (!hasTable) {
+  } else if (!hasTable && !isEmail) {
      fullTextToCopy = template.subtitle 
       ? `${template.subtitle}\n\n${template.message}` 
-      : template.message;
+      : template.message || "";
   }
 
   // Validation
   const isCopyDisabled = hasMultiSelect && selectedOptions.length === 0;
+
+  // Header Icon Logic
+  const getHeaderIcon = () => {
+    if (isEmail) return <Mail size={20} />;
+    if (hasTable) return <Building2 size={20} />;
+    return <FileText size={20} />;
+  };
+
+  const getHeaderColor = () => {
+    if (isEmail) return 'bg-cyan-100 text-cyan-600';
+    if (isRejection) return 'bg-red-100 text-red-600';
+    return 'bg-blue-100 text-blue-600';
+  };
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-shadow duration-300 flex flex-col h-full">
       {/* Header */}
       <div className="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className={`p-2 rounded-lg ${isRejection ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'}`}>
-            {hasTable ? <Building2 size={20} /> : <FileText size={20} />}
+          <div className={`p-2 rounded-lg ${getHeaderColor()}`}>
+            {getHeaderIcon()}
           </div>
           <h3 className="font-semibold text-slate-800 text-lg">{template.title}</h3>
         </div>
@@ -97,8 +124,8 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
           </div>
         )}
 
-        {/* Content Body: Table, Multi-Select or Text */}
-        <div className="bg-slate-50 rounded-lg border border-slate-200 p-0 relative group max-h-[500px] overflow-y-auto custom-scrollbar">
+        {/* Content Body */}
+        <div className={`bg-slate-50 rounded-lg border border-slate-200 p-0 relative group ${isEmail ? '' : 'max-h-[500px] overflow-y-auto custom-scrollbar'}`}>
             
             {hasTable ? (
               // TABLE VIEW
@@ -135,6 +162,38 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
                     ))}
                   </tbody>
                 </table>
+              </div>
+
+            ) : isEmail ? (
+              // EMAIL VIEW
+              <div className="p-4 space-y-4">
+                {/* Recipients Input */}
+                <div>
+                  <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Destinatários</label>
+                  <input 
+                    type="text" 
+                    value={recipients}
+                    onChange={(e) => setRecipients(e.target.value)}
+                    placeholder="ex: joao@email.com; maria@email.com"
+                    className="w-full text-sm p-2 border border-slate-300 rounded focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none"
+                  />
+                </div>
+
+                {/* Subject Display */}
+                <div>
+                  <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Assunto</label>
+                  <div className="p-2 bg-white border border-slate-200 rounded text-sm font-bold text-slate-800">
+                    {template.emailData?.subject}
+                  </div>
+                </div>
+
+                {/* Body Display */}
+                <div>
+                  <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Corpo do E-mail</label>
+                  <div className="p-3 bg-white border border-slate-200 rounded text-sm text-slate-700 font-mono whitespace-pre-wrap">
+                    {template.emailData?.body}
+                  </div>
+                </div>
               </div>
 
             ) : hasMultiSelect ? (
@@ -177,8 +236,22 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
             )}
         </div>
         
-        {/* Only show Copy Button if NOT a table */}
-        {!hasTable && (
+        {/* ACTION BUTTONS */}
+        {isEmail ? (
+          <div className="mt-auto pt-2 grid grid-cols-1 md:grid-cols-2 gap-3">
+             <button
+              onClick={handleOpenOutlook}
+              className="flex items-center justify-center gap-2 px-4 py-2 bg-cyan-600 text-white rounded-md font-medium hover:bg-cyan-700 active:transform active:scale-[0.98] transition-all shadow-sm"
+            >
+              <ExternalLink size={18} />
+              <span>Abrir no Outlook</span>
+            </button>
+            <CopyButton 
+              textToCopy={template.emailData?.body || ""} 
+              disabled={false} 
+            />
+          </div>
+        ) : !hasTable && (
           <div className="mt-auto pt-2">
               <CopyButton textToCopy={fullTextToCopy} disabled={isCopyDisabled} />
           </div>

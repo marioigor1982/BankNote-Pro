@@ -10,7 +10,8 @@ import {
   TableProperties,
   Search,
   X,
-  ScrollText
+  ScrollText,
+  Mail
 } from 'lucide-react';
 
 // --- CATEGORIES CONFIGURATION ---
@@ -42,6 +43,13 @@ const CATEGORIES: Category[] = [
     icon: Wallet,
     color: 'bg-purple-600',
     description: 'Comprovantes e validações de fluxo financeiro.'
+  },
+  {
+    id: 'emails',
+    title: 'REDIGIR E-MAILS',
+    icon: Mail,
+    color: 'bg-cyan-600',
+    description: 'Modelos de e-mails para comunicação interna e externa.'
   },
   {
     id: 'tabela',
@@ -86,7 +94,9 @@ O PROCESSO SEGUIRÁ COM A LIBERAÇÃO DO RECURSO AO VENDEDOR / PROPONENTE, PORÉ
       "FALTA MATRÍCULA - FAVOR INDEXAR A MATRÍCULA ATUALIZADA COM TODAS AS AVERBAÇÕES E REGISTROS DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER BRASIL) S/A.",
       "CONSTA APENAS 01 ASSINATURA NO CAMPO CREDOR, FAVOR OBTER ASSINATURA DOS 02 REPRESENTANTES (CREDOR), POIS A REPRESENTAÇÃO SE FAZ COM A ASSINATURA EM CONJUNTO DE DOIS PROCURADORES.",
       "IDENTIFICAMOS UMA DIVERGÊNCIA ENTRE O VALOR DO SEU FINANCIAMENTO REGISTRADO EM CONTRATO E O VALOR CONSTANTE NA MATRÍCULA DO IMÓVEL.",
-      "PARA REGULARIZAR ESSA SITUAÇÃO E GARANTIR QUE TODOS OS SEUS DADOS ESTEJAM CORRETOS, FAVOR LEVAR A MATRÍCULA AO RGI PARA CORREÇÃO NO REGISTRO Nº XXXX."
+      "PARA REGULARIZAR ESSA SITUAÇÃO E GARANTIR QUE TODOS OS SEUS DADOS ESTEJAM CORRETOS, FAVOR LEVAR A MATRÍCULA AO RGI PARA CORREÇÃO NO REGISTRO Nº XXXX.",
+      "O CONTRATO INDEXADO NÃO PERTENCE A PROPOSTA, FAVOR INDEXAR O CONTRATO XXXXX PARA PROSSEGUIRMOS.",
+      "A MATRÍCULA INDEXADA NÃO PERTECE A PROPOSTA, FAVOR INDEXAR A MATRÍCULA XXXXX PARA PROSSEGUIRMOS."
     ]
   },
 
@@ -188,6 +198,47 @@ DATA DA TRANSAÇÃO: [DATA]
 VALOR: R$ [VALOR]`
   },
 
+  // --- EMAILS CATEGORY ---
+  {
+    id: 'email-1',
+    categoryId: 'emails',
+    title: 'PAGAMENTO MANUAL AO PROCURADOR',
+    category: 'email',
+    emailData: {
+      to: 'Financeiro_Sant <Financeiro_Sant@accenture.com>',
+      subject: 'CONTINGÊNCIA | PROPOSTA XX.XXX.XXX | PAGAMENTO MANUAL AO PROCURADOR',
+      body: `Financeiro, bom dia!
+
+
+Favor seguir com o pagamento manual para o procurador conforme formulário 1704, procuração e contrato registrado anexos.
+
+
+OBS.: Após aprovação, nos retornar para o avanço da fase. Gentileza “ flegar” pagamento manual.`
+    }
+  },
+  {
+    id: 'email-2',
+    categoryId: 'emails',
+    title: 'PAGAMENTO VIA GUIA JUDICIAL',
+    category: 'email',
+    emailData: {
+      to: 'Financeiro_Sant <Financeiro_Sant@accenture.com>',
+      subject: 'PROPOSTA XX.XXX.XXX | PAGAMENTO POR GUIA JUDICIAL | ESPÓLIO DE XXXXXX XXXXX XXXXXX | PROCESSO XXXXXXXXXXXXXXXXXXXX',
+      body: `Financeiro, bom dia!
+
+Favor seguir com o pagamento referente ESPÓLIO DE MARINA DUARTE DO PRADO, via GUIA JUDICIAL anexa.
+
+Processo: 10063570620208260704
+ID 081020000179580929.
+
+A guia judicial anexa está com o vencimento para 18/09/2025.
+
+OBS.: Após aprovação, nos retornar para o avanço da fase. Gentileza “ flegar” pagamento manual.
+
+Grato.`
+    }
+  },
+
   // --- TABELA CATEGORY ---
   {
     id: 'tabela-1',
@@ -235,7 +286,7 @@ function App() {
     
     return INITIAL_TEMPLATES.filter(t => {
       // Build a single searchable string from all template data
-      let rawContent = `${t.title} ${t.subtitle || ''} ${t.message}`;
+      let rawContent = `${t.title} ${t.subtitle || ''} ${t.message || ''}`;
       
       if (t.multiSelectOptions) {
         rawContent += " " + t.multiSelectOptions.join(" ");
@@ -243,6 +294,10 @@ function App() {
       
       if (t.tableData) {
         rawContent += " " + t.tableData.map(r => `${r.col1} ${r.col2} ${r.col3}`).join(" ");
+      }
+
+      if (t.emailData) {
+        rawContent += " " + t.emailData.subject + " " + t.emailData.body;
       }
       
       const normalizedContent = normalizeText(rawContent);
