@@ -45,9 +45,13 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
     const orderedSelections = template.multiSelectOptions!
         .filter(opt => selectedOptions.includes(opt));
     
-    finalMessageBody = orderedSelections
-        .map((opt, index) => `${index + 1}. ${opt}`)
-        .join('\n\n');
+    if (template.disableAutoNumbering) {
+        finalMessageBody = orderedSelections.join('\n\n');
+    } else {
+        finalMessageBody = orderedSelections
+            .map((opt, index) => `${index + 1}. ${opt}`)
+            .join('\n\n');
+    }
         
     fullTextToCopy = template.subtitle 
       ? `${template.subtitle}\n\n${finalMessageBody}` 
@@ -137,7 +141,7 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
               // MULTI-SELECT VIEW
               <div className="p-4 space-y-3">
                 <p className="text-xs font-semibold text-slate-500 uppercase mb-2 tracking-wider">
-                  Selecione as pendências (Numeração Automática):
+                  Selecione as opções {template.disableAutoNumbering ? '(Texto Limpo)' : '(Numeração Automática)'}:
                 </p>
                 {template.multiSelectOptions!.map((option, idx) => {
                   const isSelected = selectedOptions.includes(option);
@@ -155,7 +159,7 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
                       <div className={`mt-0.5 ${isSelected ? 'text-blue-600' : 'text-slate-400'}`}>
                         {isSelected ? <CheckSquare size={20} /> : <Square size={20} />}
                       </div>
-                      <p className={`text-sm ${isSelected ? 'text-slate-800 font-medium' : 'text-slate-600'}`}>
+                      <p className={`text-sm ${isSelected ? 'text-slate-800 font-medium' : 'text-slate-600'} whitespace-pre-wrap`}>
                         {option}
                       </p>
                     </div>

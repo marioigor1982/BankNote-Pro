@@ -14,6 +14,7 @@ export interface NoteTemplate {
   category: 'contract' | 'general' | 'rejection' | 'approval';
   lastUsed?: number;
   multiSelectOptions?: string[]; // Selectable text blocks
+  disableAutoNumbering?: boolean; // If true, disables "1. ", "2. " prefixes in multi-select
   tableData?: TableRow[]; // Specific data for consultation tables
 }
 
