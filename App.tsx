@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { NoteTemplate, Category } from './types';
 import { TemplateCard } from './components/TemplateCard';
 import { 
@@ -12,7 +12,10 @@ import {
   X,
   ScrollText,
   Mail,
-  Info
+  Info,
+  CheckCircle,
+  XCircle,
+  FileText
 } from 'lucide-react';
 
 // --- CATEGORIES CONFIGURATION ---
@@ -226,7 +229,7 @@ OBS.: Após aprovação, nos retornar para o avanço da fase. Gentileza “ fleg
     category: 'email',
     emailData: {
       to: 'Financeiro_Sant <Financeiro_Sant@accenture.com>',
-      subject: 'PROPOSTA XX.XXX.XXX | PAGAMENTO POR GUIA JUDICIAL | ESPÓLIO DE XXXXXX XXXXX XXXXXX | PROCESSO XXXXXXXXXXXXXXXXXXXX',
+      subject: 'CONTINGÊNCIA | PROPOSTA XX.XXX.XXX | PAGAMENTO POR GUIA JUDICIAL | ESPÓLIO DE XXXXXX XXXXX XXXXXX | PROCESSO XXXXXXXXXXXXXXXXXXXX',
       body: `Financeiro, bom dia!
 
 Favor seguir com o pagamento referente ESPÓLIO DE MARINA DUARTE DO PRADO, via GUIA JUDICIAL anexa.
@@ -296,6 +299,7 @@ const normalizeText = (text: string) => {
 
 function App() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [activeTemplateId, setActiveTemplateId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [showInfoModal, setShowInfoModal] = useState(false);
   
@@ -330,11 +334,30 @@ function App() {
   }, [searchQuery]);
 
   // Templates Logic (Category based)
-  const categoryTemplates = selectedCategory 
-    ? INITIAL_TEMPLATES.filter(t => t.categoryId === selectedCategory)
-    : [];
+  const categoryTemplates = useMemo(() => {
+    if (!selectedCategory) return [];
+    return INITIAL_TEMPLATES.filter(t => t.categoryId === selectedCategory);
+  }, [selectedCategory]);
 
   const activeCategoryData = CATEGORIES.find(c => c.id === selectedCategory);
+
+  // Active template logic (defaults to first one if none selected)
+  const activeTemplate = useMemo(() => {
+    if (!activeTemplateId) return categoryTemplates[0];
+    return categoryTemplates.find(t => t.id === activeTemplateId) || categoryTemplates[0];
+  }, [categoryTemplates, activeTemplateId]);
+
+  // Handle Category Click
+  const selectCategory = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+    // Reset active template to the first one of the new category
+    const templates = INITIAL_TEMPLATES.filter(t => t.categoryId === categoryId);
+    if (templates.length > 0) {
+        setActiveTemplateId(templates[0].id);
+    } else {
+        setActiveTemplateId(null);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 pb-20 font-sans relative selection:bg-blue-100 selection:text-blue-900">
@@ -440,7 +463,7 @@ function App() {
                 return (
                   <button
                     key={cat.id}
-                    onClick={() => setSelectedCategory(cat.id)}
+                    onClick={() => selectCategory(cat.id)}
                     className="group bg-white/95 backdrop-blur-sm p-6 rounded-xl shadow-sm border border-slate-200 hover:border-blue-400 hover:shadow-lg hover:bg-white transition-all text-left flex items-start gap-4 duration-300"
                   >
                     <div className={`p-3 rounded-lg ${cat.color} text-white shadow-sm group-hover:scale-110 transition-transform duration-300`}>
@@ -461,9 +484,11 @@ function App() {
           </div>
         )}
 
-        {/* VIEW: TEMPLATE LIST (Only if NOT searching and category IS selected) */}
+        {/* VIEW: TEMPLATE LIST / TABS (Only if NOT searching and category IS selected) */}
         {selectedCategory && activeCategoryData && !searchQuery && (
           <div className="animate-in fade-in slide-in-from-right-8 duration-300">
+            
+            {/* Header: Back Button + Title */}
             <div className="mb-6 flex items-center gap-4">
               <button 
                 onClick={() => setSelectedCategory(null)}
@@ -477,20 +502,61 @@ function App() {
                   <activeCategoryData.icon className="text-blue-600" size={24} />
                   {activeCategoryData.title}
                 </h2>
-                <p className="text-sm text-slate-500">Lista de modelos disponíveis</p>
+                <p className="text-sm text-slate-500">Selecione a ação desejada abaixo</p>
               </div>
             </div>
 
-            <div className="grid gap-6">
-              {categoryTemplates.map((template) => (
-                <TemplateCard key={template.id} template={template} />
-              ))}
-              {categoryTemplates.length === 0 && (
-                <div className="text-center py-12 bg-white rounded-xl border border-dashed border-slate-300">
+            {/* TAB BUTTONS (Only if there are multiple templates) */}
+            {categoryTemplates.length > 1 && (
+              <div className="flex flex-wrap gap-3 mb-6">
+                {categoryTemplates.map(template => {
+                  const isActive = activeTemplate?.id === template.id;
+                  
+                  let colorClass = "bg-white text-slate-600 border-slate-200 hover:border-blue-300";
+                  let Icon = FileText;
+
+                  if (template.category === 'approval') {
+                    colorClass = isActive 
+                      ? "bg-green-600 text-white border-green-600 shadow-md ring-2 ring-green-200 ring-offset-1" 
+                      : "bg-white text-green-700 border-green-200 hover:bg-green-50";
+                    Icon = CheckCircle;
+                  } else if (template.category === 'rejection') {
+                    colorClass = isActive 
+                      ? "bg-red-600 text-white border-red-600 shadow-md ring-2 ring-red-200 ring-offset-1" 
+                      : "bg-white text-red-700 border-red-200 hover:bg-red-50";
+                    Icon = XCircle;
+                  } else {
+                    // General / Email
+                    colorClass = isActive
+                      ? "bg-blue-600 text-white border-blue-600 shadow-md ring-2 ring-blue-200 ring-offset-1"
+                      : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50";
+                  }
+
+                  return (
+                    <button
+                      key={template.id}
+                      onClick={() => setActiveTemplateId(template.id)}
+                      className={`px-5 py-3 rounded-xl font-bold text-sm transition-all duration-200 border flex items-center gap-2 ${colorClass}`}
+                    >
+                      <Icon size={18} className={isActive ? "text-white" : ""} />
+                      {template.title}
+                    </button>
+                  )
+                })}
+              </div>
+            )}
+
+            {/* ACTIVE CARD CONTENT */}
+            {activeTemplate ? (
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <TemplateCard template={activeTemplate} />
+              </div>
+            ) : (
+               <div className="text-center py-12 bg-white rounded-xl border border-dashed border-slate-300">
                   <p className="text-slate-400">Nenhum modelo encontrado nesta categoria.</p>
-                </div>
-              )}
-            </div>
+               </div>
+            )}
+
           </div>
         )}
       </main>
