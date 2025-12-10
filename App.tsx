@@ -303,6 +303,35 @@ function App() {
   const [activeTemplateId, setActiveTemplateId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [showInfoModal, setShowInfoModal] = useState(false);
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  // Clock Timer
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentDate(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Format Date and Time
+  const formattedDateTime = useMemo(() => {
+    const dateStr = currentDate.toLocaleDateString('pt-BR', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+    
+    const timeStr = currentDate.toLocaleTimeString('pt-BR', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    // Capitalize first letter of the weekday
+    const capitalizedDate = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+    
+    return `${capitalizedDate} - ${timeStr}`;
+  }, [currentDate]);
   
   // Search Logic (Smart Filtering)
   const searchResults = useMemo(() => {
@@ -584,6 +613,11 @@ function App() {
           </div>
         )}
       </main>
+
+      {/* Footer */}
+      <footer className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-sm border-t border-slate-200 py-3 text-center text-slate-500 text-sm font-medium z-30 shadow-[0_-2px_10px_rgba(0,0,0,0.02)]">
+        {formattedDateTime}
+      </footer>
 
       {/* MODAL DE INFORMAÇÕES */}
       {showInfoModal && (
