@@ -15,7 +15,8 @@ import {
   Info,
   CheckCircle,
   XCircle,
-  FileText
+  FileText,
+  ExternalLink
 } from 'lucide-react';
 
 // --- CATEGORIES CONFIGURATION ---
@@ -408,15 +409,38 @@ function App() {
             </div>
           </div>
 
-          {/* Botão de Informações */}
-          <button 
-            onClick={() => setShowInfoModal(true)}
-            className="flex items-center gap-2 px-3 py-2 text-slate-600 bg-slate-100 hover:bg-blue-50 hover:text-blue-700 rounded-lg transition-all font-medium border border-slate-200 hover:border-blue-200"
-            title="Informações do Analista"
-          >
-            <Info size={20} />
-            <span className="hidden sm:inline text-sm">Informações</span>
-          </button>
+          {/* Botões do Topo (Ações) */}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            
+            {/* Botão Acessar SCI (Novo) */}
+            <a 
+              href="https://pf.santander.aceservices.accenture.com/lgn/realms/imobpf/protocol/openid-connect/auth?response_type=code&client_id=mortgage"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-3 py-2 text-white bg-red-600 hover:bg-red-700 rounded-lg transition-all font-medium border border-red-600 shadow-sm hover:shadow active:scale-[0.98]"
+              title="Acessar Sistema SCI"
+            >
+              <img 
+                src="https://share.google/0CcJaMK6h8DOmowoG" 
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+                className="w-5 h-5 object-contain rounded-full bg-white" 
+                alt="SCI"
+              />
+              <span className="hidden sm:inline text-sm">Acessar SCI</span>
+            </a>
+
+            {/* Botão de Informações */}
+            <button 
+              onClick={() => setShowInfoModal(true)}
+              className="flex items-center gap-2 px-3 py-2 text-slate-600 bg-slate-100 hover:bg-blue-50 hover:text-blue-700 rounded-lg transition-all font-medium border border-slate-200 hover:border-blue-200"
+              title="Informações do Analista"
+            >
+              <Info size={20} />
+              <span className="hidden sm:inline text-sm">Informações</span>
+            </button>
+          </div>
         </div>
       </header>
 
