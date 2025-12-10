@@ -11,7 +11,8 @@ import {
   Search,
   X,
   ScrollText,
-  Mail
+  Mail,
+  Info
 } from 'lucide-react';
 
 // --- CATEGORIES CONFIGURATION ---
@@ -296,6 +297,7 @@ const normalizeText = (text: string) => {
 function App() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showInfoModal, setShowInfoModal] = useState(false);
   
   // Search Logic (Smart Filtering)
   const searchResults = useMemo(() => {
@@ -382,6 +384,16 @@ function App() {
               )}
             </div>
           </div>
+
+          {/* Botão de Informações */}
+          <button 
+            onClick={() => setShowInfoModal(true)}
+            className="flex items-center gap-2 px-3 py-2 text-slate-600 bg-slate-100 hover:bg-blue-50 hover:text-blue-700 rounded-lg transition-all font-medium border border-slate-200 hover:border-blue-200"
+            title="Informações do Analista"
+          >
+            <Info size={20} />
+            <span className="hidden sm:inline text-sm">Informações</span>
+          </button>
         </div>
       </header>
 
@@ -482,6 +494,227 @@ function App() {
           </div>
         )}
       </main>
+
+      {/* MODAL DE INFORMAÇÕES */}
+      {showInfoModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
+            
+            {/* Modal Header */}
+            <div className="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50 sticky top-0 z-10">
+              <div className="flex items-center gap-2 text-blue-800">
+                <Info size={24} />
+                <h3 className="text-xl font-bold">Informações e Checklist</h3>
+              </div>
+              <button 
+                onClick={() => setShowInfoModal(false)}
+                className="p-2 hover:bg-slate-200 rounded-full text-slate-500 transition-colors"
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            {/* Modal Content - Scrollable */}
+            <div className="p-6 overflow-y-auto custom-scrollbar text-slate-800 leading-relaxed">
+              
+              <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 font-bold text-center uppercase text-sm tracking-wide">
+                *** ATENÇÃO ANALISTA, REVISE AS INFORMAÇÕES ***
+              </div>
+
+              {/* COMPRADOR */}
+              <div className="mb-6">
+                <h4 className="text-lg font-bold text-blue-800 border-b border-blue-100 pb-1 mb-3">COMPRADOR</h4>
+                <div className="space-y-3">
+                  <p><strong>Declaração Pessoal de Saúde:</strong></p>
+                  <ul className="list-disc pl-5 space-y-1 text-sm text-slate-600">
+                    <li>A seguradora selecionada está de acordo com Produto (CP: Zurich Comercial / Aquisição: HDI, Zurich ou Zurich Comercial)</li>
+                    <li>Está em nome do cliente</li>
+                    <li>Está válida (Prazo: 180 dias)</li>
+                    <li>Totalmente preenchida e assinada</li>
+                    <li>Consta Apontamento?</li>
+                    <li><strong>Checar Comentários:</strong></li>
+                    <li>Retornou da Seguradora? Qual o parecer da Seguradora?</li>
+                    <li>Redução de prazo: enviar para Apoio Comercial 1 com comentário Banco</li>
+                    <li>Parecer desfavorável para um dos proponentes: enviar para Apoio Comercial 1 com comentário Banco</li>
+                  </ul>
+                  
+                  <p className="mt-2"><strong>Proposta de Crédito:</strong></p>
+                  <ul className="list-disc pl-5 space-y-1 text-sm text-slate-600">
+                    <li>Está em nome do cliente e assinada</li>
+                    <li>Profissão, e-mail, nº RG, órgão expedidor/UF e filiação informados</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* COMPRADOR/VENDEDOR PF */}
+              <div className="mb-6">
+                <h4 className="text-lg font-bold text-blue-800 border-b border-blue-100 pb-1 mb-3">COMPRADOR/VENDEDOR PF</h4>
+                <div className="space-y-4">
+                  <div>
+                    <strong className="text-slate-700">Estado Civil - SOLTEIRO:</strong>
+                    <ul className="list-disc pl-5 text-sm text-slate-600 mt-1">
+                      <li>Possui união estável</li>
+                      <li>Se estrangeiro, foi apresentado RNE válido ou passaporte com visto definitivo</li>
+                      <li>Apresentou Certidão de Casamento com averbação do atual estado civil</li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <strong className="text-slate-700">Estado Civil - CASADO:</strong>
+                    <ul className="list-disc pl-5 text-sm text-slate-600 mt-1">
+                      <li>Certidão de Casamento</li>
+                      <li>Comunhão Parcial de Bens: antes de 26/12/77</li>
+                      <li>Comunhão Universal de Bens: após 26/12/77 + Pacto Registrado no Cartório de Imóveis</li>
+                      <li>Separação Total de Bens: para todos os casos + Pacto Registrado no Cartório de Imóveis</li>
+                      <li>Participação Final nos Aquestos: para todos os casos</li>
+                      <li>Certidão de Casamento traduzida, juramentada e registrada no Cartório de Títulos e Documentos (Para os casos de casamento estrangeiro)</li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <strong className="text-slate-700">DIVORCIADO / SEPARADO:</strong>
+                    <ul className="list-disc pl-5 text-sm text-slate-600 mt-1">
+                      <li>Possui união estável</li>
+                      <li>Apresentou Certidão de Casamento com averbação do atual estado civil</li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <strong className="text-slate-700">VIÚVO:</strong>
+                    <ul className="list-disc pl-5 text-sm text-slate-600 mt-1">
+                      <li>Possui união estável</li>
+                      <li>Apresentou Certidão de Casamento com averbação do óbito ou Certidão de Óbito acompanhada da Certidão de Casamento</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* VENDEDOR PF */}
+              <div className="mb-6">
+                <h4 className="text-lg font-bold text-blue-800 border-b border-blue-100 pb-1 mb-3">VENDEDOR PF</h4>
+                <ul className="list-disc pl-5 space-y-1 text-sm text-slate-600">
+                  <li>Opção de Compra e Venda</li>
+                  <li>Estado Civil (Vide acima)</li>
+                  <li>Consta conta corrente do vendedor</li>
+                  <li>Certidão Negativa de Débitos Trabalhistas (CNDT)</li>
+                  <li>Venda de Ascendente para Descendente: declaração dos vendedores indicando os herdeiros com qualificação completa e assinatura</li>
+                  <li>Documentação dos herdeiros recepcionados</li>
+                  <li className="mt-2"><strong>Procuração (Comprador: com poderes para compra e Vendedor com poderes para Venda e receber):</strong></li>
+                  <li>Está válida (Prazo: 90 dias a partir do traslado)</li>
+                  <li>Possui poderes para compra conforme 238</li>
+                  <li>Procuração lavrada no exterior</li>
+                  <li>Consta endereço do imóvel objeto do financiamento</li>
+                </ul>
+              </div>
+
+              {/* VENDEDOR PJ */}
+              <div className="mb-6">
+                <h4 className="text-lg font-bold text-blue-800 border-b border-blue-100 pb-1 mb-3">VENDEDOR PJ</h4>
+                <ul className="list-disc pl-5 space-y-1 text-sm text-slate-600">
+                  <li>Opção de Compra e Venda</li>
+                  <li>Consta conta corrente do vendedor</li>
+                  <li>E-mail (não poderá ser utilizado caixa jurídica)</li>
+                  <li className="mt-2"><strong>Carta Assinada pelos Representantes Legais:</strong></li>
+                  <li>Consta data da última alteração contratual</li>
+                  <li>Consta os representantes</li>
+                  <li className="mt-2"><strong>Consulta Serasa:</strong></li>
+                  <li>Possui apontamento (direcionar para a equipe do Jurídico) ou analisar os apontamentos</li>
+                  <li className="mt-2"><strong>Certidão de Débitos Relativos a Créditos Tributários Federais e à Dívida Ativa da União:</strong> (Certidão Unificada do INSS). Caso não seja possível emitir internamente, solicitar ao cliente via parecer.</li>
+                  <li className="mt-2"><strong>Contrato Social e/ou Alterações Contratuais (LTDA):</strong></li>
+                  <li>Consta em nome da Vendedora</li>
+                  <li>Documento Consolidado</li>
+                  <li>Documento registrado na Junta Comercial</li>
+                  <li className="mt-2"><strong>Estatuto Social (S/A):</strong></li>
+                  <li>Consta em nome da Vendedora</li>
+                  <li>Ata que elegeu a diretoria</li>
+                  <li>Documento registrado na Junta Comercial</li>
+                </ul>
+              </div>
+
+              {/* IMÓVEL */}
+              <div className="mb-6">
+                <h4 className="text-lg font-bold text-blue-800 border-b border-blue-100 pb-1 mb-3">IMÓVEL</h4>
+                <ul className="list-disc pl-5 space-y-1 text-sm text-slate-600">
+                  <li><strong>Matrícula do Imóvel:</strong></li>
+                  <li>Está em nome dos atuais vendedores</li>
+                  <li>Consta averbação da Construção</li>
+                  <li>Está válida (Prazo: 30 dias)</li>
+                  <li>Título aquisitivo descrito conforme Compra e Venda</li>
+                  <li>Endereço do Imóvel Inscrição imobiliária comparada com o IPTU</li>
+                  <li>O Imóvel é do estado MT. Atentar-se quanto a validade da Matricula do Imóvel corresponder aos seguintes estados: SP, RJ, PA, ES ou PE, para os casos de vencida solicitar a Matrícula Interna.</li>
+                  <li className="mt-2"><strong>Certidão Negativa de Tributos Imobiliários:</strong></li>
+                  <li>Está válida (Prazo de 90 dias, caso não possua validade expressa no documento)</li>
+                  <li>Certidão Positiva com Efeito de Negativa, se sim: Imóvel gravado com usufruto/inalienabilidade/penhora - Se sim solicitou cancelamento</li>
+                  <li>Declaração de ciência de débitos em aberto, isentando o Banco Santander de qualquer responsabilidade, datada e assinada pelo cliente.</li>
+                  <li className="mt-2"><strong>Imóvel Foreiro União/Marinha:</strong></li>
+                  <li>Certidão Positiva, se sim: Comprovante de pagamento do Laudêmio CAT- Tela consulta de débitos do exercício atual</li>
+                  <li>Imóvel Foro Particular ou ocupação - Tela onde consta o valor da dívida total (incluindo dívida ativa)</li>
+                  <li>Comprovante de pagamento do Laudêmio Autorização do Senhorio</li>
+                  <li>Cálculo demonstrando que a dívida é inferior a 5% do valor de avaliação</li>
+                </ul>
+              </div>
+
+              {/* IPTU */}
+              <div className="mb-6">
+                <h4 className="text-lg font-bold text-blue-800 border-b border-blue-100 pb-1 mb-3">IPTU & ÔNUS</h4>
+                <ul className="list-disc pl-5 space-y-1 text-sm text-slate-600">
+                  <li>IPTU atualizado (ano vigente/anterior)</li>
+                  <li>Consta metragens do imóvel</li>
+                  <li>Consta Inscrição Imobiliária</li>
+                  <li>Endereço do Imóvel conforme matrícula</li>
+                  <li className="mt-2"><strong>Ônus/Hipoteca/Alienação Fiduciária:</strong></li>
+                  <li>Declaração de ciência de débitos em aberto, isentando o Banco Santander de qualquer responsabilidade, datada e assinada pelo cliente.</li>
+                  <li>Cadastro realizado em sistema, em caso negativa cadastrá-lo</li>
+                  <li>Exigência Cartorária</li>
+                  <li>Necessário inclusão de cláusula</li>
+                  <li>Necessário apresentação de documentos complementares</li>
+                  <li>Necessário inclusão de condicionantes</li>
+                </ul>
+              </div>
+
+              {/* FGTS & COMPROVANTES */}
+              <div className="mb-6">
+                <h4 className="text-lg font-bold text-blue-800 border-b border-blue-100 pb-1 mb-3">FGTS & COMPROVANTES</h4>
+                <ul className="list-disc pl-5 space-y-1 text-sm text-slate-600">
+                  <li>Proposta enquadrada no SFH (Imóvel residencial, imóvel objeto do financiamento não pode ter utilização do FGTS a menos de 3 anos, não ter imóvel impeditivo, para os estados de: São Paulo, Minas Gerais, Distrito Federal e Rio de Janeiro respeitando limites atuais.</li>
+                  <li className="mt-2"><strong>Autorização para movimentação de Conta Vinculada do FGTS:</strong></li>
+                  <li>Documento Legível e sem rasuras</li>
+                  <li>Cabeçalho completo: nome, data de nascimento, CPF e PIS/PASEP</li>
+                  <li>Código Empregado, código empregador e valores de acordo com o extrato do FGTS</li>
+                  <li>Valor total disponível para saque</li>
+                  <li>Assinado com local e data</li>
+                  <li>Nome do Titular</li>
+                  <li>Número do PIS</li>
+                  <li>Item FMP "Fundo Mútuo de Privatização" preenchido</li>
+                  <li className="mt-2"><strong>Extrato Atualizado do FGTS (90 dias):</strong></li>
+                  <li>Situação da conta</li>
+                  <li>Base da conta</li>
+                  <li className="mt-2"><strong>Declaração de Imposto de Renda:</strong></li>
+                  <li>Consta em nome do cliente</li>
+                  <li>Se apresentado a retificadora após 30/04, deverá apresentar juntamente a Original</li>
+                  <li>Consta Protocolo de Entrega</li>
+                  <li>Existe imóvel declarado no IR: Imóvel declarado no IR situa-se no mesmo local do imóvel objeto do financiamento ou no mesmo local de residência do cliente, se sim, solicitar matrícula atuallizada constando a venda</li>
+                  <li className="mt-2"><strong>Comprovante de Residência:</strong></li>
+                  <li>Está válido (Prazo: 90 dias) Somente deverá ser solicitado caso o cliente não se enquadre pelo local de trabalho e no IR a cidade do endereço esteja diferente.</li>
+                  <li>Ano Anterior (Quando houver imóvel declarado no IR ou quando não há enquadramento pelo local de trabalho)</li>
+                  <li><strong>Comprovante de Domicílio Profissional:</strong> Caso processo não seja enquadrado pelo local de residência ou município informado no formulário, deverá solicitar declaração do empregador</li>
+                </ul>
+              </div>
+
+              {/* MINUTA */}
+              <div className="mb-6">
+                <h4 className="text-lg font-bold text-blue-800 border-b border-blue-100 pb-1 mb-3">MINUTA</h4>
+                <ul className="list-disc pl-5 space-y-1 text-sm text-slate-600">
+                  <li>Conferir campos de assinatura de todos os participantes</li>
+                  <li>Checado qualificação dos compradores e vendedores</li>
+                  <li>Cláusulas incluídas e conferidas</li>
+                </ul>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
