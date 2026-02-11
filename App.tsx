@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { NoteTemplate, Category } from './types';
 import { TemplateCard } from './components/TemplateCard';
-import { ImobWidget } from './components/ImobWidget';
 import { 
   ShieldCheck, 
   ArrowLeft,
@@ -17,8 +16,7 @@ import {
   CheckCircle,
   XCircle,
   FileText,
-  HandCoins,
-  TrendingUp
+  HandCoins
 } from 'lucide-react';
 
 // --- CATEGORIES CONFIGURATION ---
@@ -145,7 +143,7 @@ O PROCESSO SEGUIRÁ COM A LIBERAÇÃO DO RECURSO AO VENDEDOR / PROPONENTE, PORÉ
       "CONSTA APENAS 01 ASSINATURA NO CAMPO CREDOR, FAVOR OBTER ASSINATURA DOS 02 REPRESENTANTES (CREDOR), POIS A REPRESENTAÇÃO SE FAZ COM A ASSINATURA EM CONJUNTO DE DOIS PROCURADORES.",
       "IDENTIFICAMOS UMA DIVERGÊNCIA ENTRE O VALOR DO SEU FINANCIAMENTO REGISTRADO EM CONTRATO E O VALOR CONSTANTE NA MATRÍCULA DO IMÓVEL.",
       "PARA REGULARIZAR ESSA SITUAÇÃO E GARANTIR QUE TODOS OS SEUS DADOS ESTEJAM CORRETOS, FAVOR LEVAR A MATRÍCULA AO RGI PARA CORREÇÃO NO REGISTRO Nº XXXX.",
-      "OBSERVAR QUE FALTOU OS DADOS DE UM DOS QUALIFICADOS (XXXX) NA MATRÍCULA, FAVOR LEVAR AO CARTÓRIO PARA CORREÇÃO.",
+      "OBSERVAR QUE FALTOU OS DADOS DE UN DOS QUALIFICADOS (XXXX) NA MATRÍCULA, FAVOR LEVAR AO CARTÓRIO PARA CORREÇÃO.",
       "FALTOU O FORMULÁRIO 1704, FAVOR PROVIDENCIAR O FORMULÁRIO 1704 DEVIDAMENTE ASSINADO, A ASSINATURA DO FORMULÁRIO PRECISA SER IGUAL A ASSINATURA DO CONTRATO REGISTRADO",
       "SOLICITAMOS PROVIDENCIAR O FORMULÁRIO 1704, POR TRATAR DE PAGAMENTO AO PROCURADOR, O QUAL ESTÁ QUALIFICADO EM CONTRATO, PARA VALIDAÇÃO DOS DADOS BANCÁRIOS. SOLICITAMOS QUE SEJA PREENCHIDO NO CAMPO DO PROCURADOR O NOME DO PROCURADOR E SEU CPF. OBS: A ASSINATURA DO FORMULÁRIO PRECISA SER IGUAL A ASSINATURA DO CONTRATO REGISTRADO.",
       "PROCURAÇÃO VENCIDA, FAVOR PROVIDENCIAR UMA NOVA PROCURAÇÃO/SUBSTABELECIMENTO COM PRAZO VIGENTE DE 90 DIAS CONTADOS A PARTIR DA DATA DE EMISSÃO.",
@@ -330,7 +328,6 @@ function App() {
       minute: '2-digit'
     });
 
-    // Capitalize first letter of the weekday
     const capitalizedDate = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
     
     return `${capitalizedDate} - ${timeStr}`;
@@ -340,7 +337,6 @@ function App() {
   const searchResults = useMemo(() => {
     if (!searchQuery.trim()) return [];
     
-    // Split query into tokens and normalize
     const terms = normalizeText(searchQuery).split(" ").filter(t => t.length > 0);
     
     return INITIAL_TEMPLATES.filter(t => {
@@ -462,15 +458,6 @@ function App() {
         {!selectedCategory && !searchQuery && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             
-            {/* WIDGET IMOB */}
-            <div className="mb-8">
-              <div className="flex items-center gap-2 mb-3 px-2">
-                <TrendingUp className="text-red-600" size={20} />
-                <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider">Índice Imobiliário (IMOB) - Tempo Real</h3>
-              </div>
-              <ImobWidget />
-            </div>
-
             <div className="mb-8 text-center bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
               <h2 className="text-2xl font-bold text-slate-800 mb-2">Comentário Banco</h2>
               <p className="text-slate-600 font-medium">Selecione o tipo de produto para acessar os modelos.</p>
