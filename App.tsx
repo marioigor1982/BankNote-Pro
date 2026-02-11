@@ -4,7 +4,6 @@ import { TemplateCard } from './components/TemplateCard';
 import { 
   ShieldCheck, 
   ArrowLeft,
-  Home,
   FileSignature,
   Wallet,
   TableProperties,
@@ -24,7 +23,7 @@ const CATEGORIES: Category[] = [
   {
     id: 'ccb',
     title: 'CCB – USECASA, USEIMÓVEL',
-    icon: HandCoins, // Ícone de dinheiro na mão/empréstimo
+    icon: HandCoins, // Ícone de empréstimo/dinheiro
     color: 'bg-red-600',
     description: 'Validações de crédito imobiliário e pendências.'
   },
@@ -470,16 +469,16 @@ function App() {
                   <button
                     key={cat.id}
                     onClick={() => selectCategory(cat.id)}
-                    className="group bg-red-600 p-6 rounded-xl shadow-md border border-red-700 hover:bg-red-700 hover:shadow-xl transition-all text-left flex items-start gap-4 duration-300"
+                    className="group bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:border-red-400 hover:shadow-lg transition-all text-left flex items-start gap-4 duration-300"
                   >
-                    <div className="p-3 rounded-lg bg-white/10 text-white shadow-inner group-hover:scale-110 transition-transform duration-300">
+                    <div className="p-3 rounded-lg bg-red-600 text-white shadow-md group-hover:scale-110 transition-transform duration-300">
                       <Icon size={24} />
                     </div>
                     <div>
-                      <h3 className="font-bold text-white text-lg">
+                      <h3 className="font-bold text-slate-800 text-lg group-hover:text-red-700 transition-colors">
                         {cat.title}
                       </h3>
-                      <p className="text-sm text-white/80 mt-1 leading-relaxed">
+                      <p className="text-sm text-slate-500 mt-1 leading-relaxed">
                         {cat.description}
                       </p>
                     </div>
