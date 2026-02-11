@@ -1,10 +1,11 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { NoteTemplate, Category } from './types';
 import { TemplateCard } from './components/TemplateCard';
+import { ImobWidget } from './components/ImobWidget';
 import { 
   ShieldCheck, 
   ArrowLeft,
-  Building2,
+  Home,
   FileSignature,
   Wallet,
   TableProperties,
@@ -16,7 +17,8 @@ import {
   CheckCircle,
   XCircle,
   FileText,
-  ExternalLink
+  HandCoins,
+  TrendingUp
 } from 'lucide-react';
 
 // --- CATEGORIES CONFIGURATION ---
@@ -24,43 +26,43 @@ const CATEGORIES: Category[] = [
   {
     id: 'ccb',
     title: 'CCB – USECASA, USEIMÓVEL',
-    icon: Building2,
-    color: 'bg-blue-600',
+    icon: HandCoins, // Ícone de dinheiro na mão/empréstimo
+    color: 'bg-red-600',
     description: 'Validações de crédito imobiliário e pendências.'
   },
   {
     id: 'aquisicao',
     title: 'AQUISIÇÃO – CONTRATO NORMAL',
     icon: FileSignature,
-    color: 'bg-emerald-600',
+    color: 'bg-red-600',
     description: 'Contratos de compra e venda padrão.'
   },
   {
     id: 'arisp',
     title: 'ARISP / CERTIDÕES',
     icon: ScrollText,
-    color: 'bg-orange-600',
+    color: 'bg-red-600',
     description: 'Solicitações e validações de certidões digitais.'
   },
   {
     id: 'pagamento',
     title: 'CONFIRMAÇÃO DE PAGAMENTO',
     icon: Wallet,
-    color: 'bg-purple-600',
+    color: 'bg-red-600',
     description: 'Comprovantes e validações de fluxo financeiro.'
   },
   {
     id: 'emails',
     title: 'REDIGIR E-MAILS',
     icon: Mail,
-    color: 'bg-cyan-600',
+    color: 'bg-red-600',
     description: 'Modelos de e-mails para comunicação interna e externa.'
   },
   {
     id: 'tabela',
     title: 'TABELA DE BANCOS',
     icon: TableProperties,
-    color: 'bg-slate-600',
+    color: 'bg-red-600',
     description: 'Alterações de códigos e dados bancários.'
   }
 ];
@@ -131,8 +133,9 @@ O PROCESSO SEGUIRÁ COM A LIBERAÇÃO DO RECURSO AO VENDEDOR / PROPONENTE, PORÉ
     subtitle: 'RECUSA COM PENDÊNCIAS',
     message: '', 
     multiSelectOptions: [
+      "FORMULÁRIO 1704 IRREGULAR. OBSERVE QUE O FORMULÁRIO FOI ASSINADO DIGITALMENTE, ENQUANTO O CONTRATO REGISTRADO POSSUI ASSINATURA MANUSCRITA. A MODALIDADE DE ASSINATURA DO FORMULÁRIO DEVE SER IDÊNTICA À DO CONTRATO APRESENTADO.",
       "PREZADO(A)(S), O CONTRATO E A MATRÍCULA INDEXADOS ESTÃO CORROMPIDOS, IMPOSSIBILITANDO EFETUAR DOWNLOAD E VISUALIZAÇÃO. GENTILEZA INDEXAR NOVAMENTE O CONTRATO E MATRÍCULA NOS SEUS RESPECTIVOS CAMPOS.",
-      "CONTRATO INCOMPLETO. GENTILEZA NOTAR QUE FOI INDEXADO SOMENTE AS PÁGINAS ÍMPARES DO CONTRATO REGISTRADO, FAVOR INDEXAR CONTRATO COMPLETO WITH AS 19 PÁGINAS PARA ANÁLISE.",
+      "CONTRATO INCOMPLETO. GENTILEZA NOTAR QUE FOI INDEXADO SOMENTE AS PÁGINAS ÍMPARES DO CONTRATO REGISTRADO, FAVOR INDEXAR CONTRATO COMPLETO COM AS 19 PÁGINAS PARA ANÁLISE.",
       "MATRÍCULA INCOMPLETA, FAVOR INDEXAR MATRÍCULA COMPLETA COM TODOS OS REGISTROS E AVERBAÇÕES DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER (BRASIL) S/A.",
       "MATRÍCULA DESATUALIZADA. PREZADOS GENTILEZA, NOTAR QUE A MATRÍCULA INDEXADA NÃO ESTÁ ATUALIZADA. FAVOR INDEXAR MATRÍCULA ATUALIZADA COM TODOS OS REGISTROS E AVERBAÇÕES DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER (BRASIL) S/A.",
       "PREZADOS GENTILEZA, NOTAR QUE PARA SEGUIRMOS COM A ANÁLISE É NECESSÁRIO INDEXAR A VIA NEGOCIÁVEL DA CÉDULA DE CRÉDITO BANCÁRIA REGISTRADA.",
@@ -172,7 +175,7 @@ PREZADOS, REALIZADA A VALIDAÇÃO DO CONTRATO REGISTRADO, OS DOCUMENTOS APRESENT
 
 REGISTRO DA ALIENAÇÃO FIDUCIÁRIA DO IMÓVEL A FAVOR DO BANCO SANTANDER, SOB O Nº R-
 
-DADOS BANCÁRIOS NO SISTEMA AG C/C DE ACORDO WITH CONTRATO REGISTRADO`
+DADOS BANCÁRIOS NO SISTEMA AG C/C DE ACORDO COM CONTRATO REGISTRADO`
   },
   {
     id: 'arisp-2',
@@ -341,24 +344,11 @@ function App() {
     const terms = normalizeText(searchQuery).split(" ").filter(t => t.length > 0);
     
     return INITIAL_TEMPLATES.filter(t => {
-      // Build a single searchable string from all template data
       let rawContent = `${t.title} ${t.subtitle || ''} ${t.message || ''}`;
-      
-      if (t.multiSelectOptions) {
-        rawContent += " " + t.multiSelectOptions.join(" ");
-      }
-      
-      if (t.tableData) {
-        rawContent += " " + t.tableData.map(r => `${r.col1} ${r.col2} ${r.col3}`).join(" ");
-      }
-
-      if (t.emailData) {
-        rawContent += " " + t.emailData.subject + " " + t.emailData.body;
-      }
-      
+      if (t.multiSelectOptions) rawContent += " " + t.multiSelectOptions.join(" ");
+      if (t.tableData) rawContent += " " + t.tableData.map(r => `${r.col1} ${r.col2} ${r.col3}`).join(" ");
+      if (t.emailData) rawContent += " " + t.emailData.subject + " " + t.emailData.body;
       const normalizedContent = normalizeText(rawContent);
-
-      // Check if ALL terms are present in the content (AND logic)
       return terms.every(term => normalizedContent.includes(term));
     });
   }, [searchQuery]);
@@ -371,16 +361,13 @@ function App() {
 
   const activeCategoryData = CATEGORIES.find(c => c.id === selectedCategory);
 
-  // Active template logic (defaults to first one if none selected)
   const activeTemplate = useMemo(() => {
     if (!activeTemplateId) return categoryTemplates[0];
     return categoryTemplates.find(t => t.id === activeTemplateId) || categoryTemplates[0];
   }, [categoryTemplates, activeTemplateId]);
 
-  // Handle Category Click
   const selectCategory = (categoryId: string) => {
     setSelectedCategory(categoryId);
-    // Reset active template to the first one of the new category
     const templates = INITIAL_TEMPLATES.filter(t => t.categoryId === categoryId);
     if (templates.length > 0) {
         setActiveTemplateId(templates[0].id);
@@ -392,21 +379,7 @@ function App() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 pb-20 font-sans relative selection:bg-red-100 selection:text-red-900">
       
-      {/* Background Image - Only on Initial Dashboard (and when not searching) */}
-      {!selectedCategory && !searchQuery && (
-        <div 
-          className="fixed inset-0 z-0 transition-opacity duration-700 ease-in-out pointer-events-none"
-          style={{
-            backgroundImage: 'url("https://www.mobills.com.br/blog/wp-content/uploads/2023/03/financiamento-imobiliario-santander.png")',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            opacity: 0.4, 
-          }}
-        />
-      )}
-
-      {/* Header - Alterado para Vermelho com Texto Branco */}
+      {/* Header */}
       <header className="bg-red-600 border-b border-red-700 sticky top-0 z-20 shadow-md transition-colors">
         <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
           <div className="flex items-center gap-2 flex-shrink-0">
@@ -416,7 +389,7 @@ function App() {
             </h1>
           </div>
 
-          {/* Search Bar - Estilo adaptado para fundo vermelho */}
+          {/* Search Bar */}
           <div className="flex-1 max-w-md relative">
             <div className="relative group">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-red-600 transition-colors" size={18} />
@@ -428,20 +401,14 @@ function App() {
                 className="w-full bg-white border border-transparent rounded-full pl-10 pr-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400 transition-all text-slate-900 placeholder:text-slate-400 shadow-inner"
               />
               {searchQuery && (
-                <button 
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                >
+                <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                   <X size={16} />
                 </button>
               )}
             </div>
           </div>
 
-          {/* Botões do Topo - Adaptados para fundo vermelho */}
           <div className="flex items-center gap-2 flex-shrink-0">
-            
-            {/* Botão Acessar SCI - Branco sobre Vermelho */}
             <a 
               href="https://pf.santander.aceservices.accenture.com/lgn/realms/imobpf/protocol/openid-connect/auth?response_type=code&client_id=mortgage"
               target="_blank"
@@ -451,8 +418,6 @@ function App() {
             >
               <span className="hidden sm:inline text-sm">SCI</span>
             </a>
-
-            {/* Botão de Informações - Estilo fantasma branco */}
             <button 
               onClick={() => setShowInfoModal(true)}
               className="flex items-center gap-2 px-3 py-2 text-white bg-white/10 hover:bg-white/20 rounded-lg transition-all font-medium border border-white/30"
@@ -496,7 +461,17 @@ function App() {
         {/* VIEW: CATEGORY DASHBOARD */}
         {!selectedCategory && !searchQuery && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="mb-8 text-center bg-white/60 p-6 rounded-2xl backdrop-blur-sm shadow-sm border border-white/50">
+            
+            {/* WIDGET IMOB */}
+            <div className="mb-8">
+              <div className="flex items-center gap-2 mb-3 px-2">
+                <TrendingUp className="text-red-600" size={20} />
+                <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider">Índice Imobiliário (IMOB) - Tempo Real</h3>
+              </div>
+              <ImobWidget />
+            </div>
+
+            <div className="mb-8 text-center bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
               <h2 className="text-2xl font-bold text-slate-800 mb-2">Comentário Banco</h2>
               <p className="text-slate-600 font-medium">Selecione o tipo de produto para acessar os modelos.</p>
             </div>
@@ -508,16 +483,16 @@ function App() {
                   <button
                     key={cat.id}
                     onClick={() => selectCategory(cat.id)}
-                    className="group bg-white/95 backdrop-blur-sm p-6 rounded-xl shadow-sm border border-slate-200 hover:border-red-400 hover:shadow-lg hover:bg-white transition-all text-left flex items-start gap-4 duration-300"
+                    className="group bg-red-600 p-6 rounded-xl shadow-md border border-red-700 hover:bg-red-700 hover:shadow-xl transition-all text-left flex items-start gap-4 duration-300"
                   >
-                    <div className={`p-3 rounded-lg ${cat.color} text-white shadow-sm group-hover:scale-110 transition-transform duration-300`}>
+                    <div className="p-3 rounded-lg bg-white/10 text-white shadow-inner group-hover:scale-110 transition-transform duration-300">
                       <Icon size={24} />
                     </div>
                     <div>
-                      <h3 className="font-bold text-slate-800 group-hover:text-red-700 transition-colors">
+                      <h3 className="font-bold text-white text-lg">
                         {cat.title}
                       </h3>
-                      <p className="text-sm text-slate-500 mt-1 leading-relaxed">
+                      <p className="text-sm text-white/80 mt-1 leading-relaxed">
                         {cat.description}
                       </p>
                     </div>
@@ -532,10 +507,7 @@ function App() {
         {selectedCategory && activeCategoryData && !searchQuery && (
           <div className="animate-in fade-in slide-in-from-right-8 duration-300">
             <div className="mb-6 flex items-center gap-4">
-              <button 
-                onClick={() => setSelectedCategory(null)}
-                className="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-500"
-              >
+              <button onClick={() => setSelectedCategory(null)} className="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-500">
                 <ArrowLeft size={24} />
               </button>
               <div>
@@ -556,7 +528,6 @@ function App() {
                   
                   if (isActive) {
                     if (template.category === 'approval') colorClass = "bg-green-600 text-white border-green-600 shadow-md ring-2 ring-green-200";
-                    if (template.category === 'rejection') colorClass = "bg-red-600 text-white border-red-600 shadow-md ring-2 ring-red-200";
                   }
 
                   return (
@@ -582,12 +553,12 @@ function App() {
         )}
       </main>
 
-      {/* Footer - Alterado para Vermelho com Texto Branco */}
+      {/* Footer */}
       <footer className="fixed bottom-0 left-0 right-0 bg-red-600 border-t border-red-700 py-3 text-center text-white text-sm font-bold z-30 shadow-[0_-2px_10px_rgba(0,0,0,0.1)]">
         {formattedDateTime}
       </footer>
 
-      {/* MODAL DE INFORMAÇÕES (Sem alterações necessárias aqui, mantém fundo neutro para legibilidade do texto longo) */}
+      {/* MODAL DE INFORMAÇÕES */}
       {showInfoModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
@@ -600,19 +571,38 @@ function App() {
                 <X size={24} />
               </button>
             </div>
-            <div className="p-6 overflow-y-auto custom-scrollbar text-slate-800 leading-relaxed">
-              <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 font-bold text-center uppercase text-sm tracking-wide">
+            <div className="p-6 overflow-y-auto custom-scrollbar text-slate-800 leading-relaxed text-sm">
+               <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 font-bold text-center uppercase tracking-wide">
                 *** ATENÇÃO ANALISTA, REVISE AS INFORMAÇÕES ***
               </div>
-              {/* Conteúdo do checklist mantido... */}
-              <div className="mb-6">
-                <h4 className="text-lg font-bold text-red-800 border-b border-red-100 pb-1 mb-3">COMPRADOR</h4>
-                <div className="space-y-3 text-sm text-slate-600">
-                  <p><strong>Declaração Pessoal de Saúde:</strong> Verifique se está em nome do cliente, válida (180 dias) e assinada.</p>
-                  <p><strong>Proposta de Crédito:</strong> Nome, assinatura e qualificações completas informadas.</p>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="text-lg font-bold text-red-800 border-b border-red-100 pb-1 mb-3">COMPRADOR</h4>
+                  <ul className="list-disc pl-5 space-y-1 text-slate-600">
+                    <li><strong>DPS:</strong> Zurich Comercial / Aquisição: HDI, Zurich ou Zurich Comercial. Válida por 180 dias.</li>
+                    <li><strong>Proposta:</strong> Assinada, com e-mail, RG, órgão expedidor e filiação.</li>
+                  </ul>
+                  <h4 className="text-lg font-bold text-red-800 border-b border-red-100 pb-1 mb-3 mt-6">ESTADO CIVIL</h4>
+                  <ul className="list-disc pl-5 space-y-1 text-slate-600">
+                    <li><strong>Solteiro:</strong> Checar união estável. Estrangeiro precisa de RNE/Passaporte com visto.</li>
+                    <li><strong>Casado:</strong> Pacto antenupcial se Comunhão Universal (após 1977) ou Separação Total.</li>
+                  </ul>
+                </div>
+                <div>
+                   <h4 className="text-lg font-bold text-red-800 border-b border-red-100 pb-1 mb-3">IMÓVEL</h4>
+                  <ul className="list-disc pl-5 space-y-1 text-slate-600">
+                    <li><strong>Matrícula:</strong> Em nome dos vendedores, com averbação da construção. Válida por 30 dias.</li>
+                    <li><strong>IPTU:</strong> Ano vigente ou anterior. Inscrição imobiliária conferida.</li>
+                    <li><strong>Certidão de Tributos:</strong> Válida por 90 dias se não houver prazo expresso.</li>
+                  </ul>
+                  <h4 className="text-lg font-bold text-red-800 border-b border-red-100 pb-1 mb-3 mt-6">FGTS</h4>
+                  <ul className="list-disc pl-5 space-y-1 text-slate-600">
+                    <li>Autorização legível e sem rasuras.</li>
+                    <li>Extrato atualizado (máximo 90 dias).</li>
+                    <li>IRRF original e retificadora (se houver).</li>
+                  </ul>
                 </div>
               </div>
-              {/* Resto do modal aqui... */}
             </div>
           </div>
         </div>
