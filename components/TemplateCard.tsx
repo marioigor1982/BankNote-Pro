@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NoteTemplate } from '../types';
 import { CopyButton } from './CopyButton';
-import { FileText, Trash2, CheckCircle, XCircle, Square, CheckSquare, Building2, Mail, ExternalLink } from 'lucide-react';
+import { FileText, Trash2, CheckCircle, XCircle, Square, CheckSquare, Building2, Mail, ExternalLink, Plus } from 'lucide-react';
 
 interface TemplateCardProps {
   template: NoteTemplate;
@@ -10,7 +10,8 @@ interface TemplateCardProps {
 
 export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }) => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-  const [dynamicInputs, setDynamicInputs] = useState<Record<string, string[]>>({});
+  // Record<optionKey, Record<placeholderIndex, string[]>>
+  const [dynamicInputs, setDynamicInputs] = useState<Record<string, Record<number, string[]>>>({});
   const [recipients, setRecipients] = useState(template.emailData?.to || '');
   const [imageErrors, setImageErrors] = useState<Record<number, boolean>>({});
   
@@ -30,11 +31,23 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
     );
   };
 
-  const updateDynamicInput = (option: string, index: number, value: string) => {
+  const updateDynamicInputValue = (option: string, placeholderIdx: number, valueIdx: number, value: string) => {
     setDynamicInputs(prev => {
-      const current = [...(prev[option] || [])];
-      current[index] = value;
-      return { ...prev, [option]: current };
+      const optionStore = { ...(prev[option] || {}) };
+      const placeholderStore = [...(optionStore[placeholderIdx] || [""])];
+      placeholderStore[valueIdx] = value;
+      optionStore[placeholderIdx] = placeholderStore;
+      return { ...prev, [option]: optionStore };
+    });
+  };
+
+  const addPlaceholderValue = (option: string, placeholderIdx: number) => {
+    setDynamicInputs(prev => {
+      const optionStore = { ...(prev[option] || {}) };
+      const placeholderStore = [...(optionStore[placeholderIdx] || [""])];
+      placeholderStore.push("");
+      optionStore[placeholderIdx] = placeholderStore;
+      return { ...prev, [option]: optionStore };
     });
   };
 
@@ -44,22 +57,40 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
     const parts = option.split('XX');
     return (
       <div className={`text-sm leading-relaxed ${selectedOptions.includes(option) ? 'text-slate-800 font-medium' : 'text-slate-600'}`}>
-        {parts.map((part, idx) => (
-          <React.Fragment key={idx}>
+        {parts.map((part, pIdx) => (
+          <React.Fragment key={pIdx}>
             {part}
-            {idx < parts.length - 1 && (
-              <select
-                value={dynamicInputs[option]?.[idx] || ""}
-                onChange={(e) => updateDynamicInput(option, idx, e.target.value)}
-                onClick={(e) => e.stopPropagation()}
-                className="inline-block mx-1 px-1 py-0.5 bg-white border border-slate-300 rounded focus:ring-2 focus:ring-red-500 outline-none text-xs w-12 text-center"
-              >
-                <option value="">XX</option>
-                {Array.from({ length: 99 }, (_, i) => {
-                  const val = (i + 1).toString().padStart(2, '0');
-                  return <option key={val} value={val}>{val}</option>;
-                })}
-              </select>
+            {pIdx < parts.length - 1 && (
+              <div className="inline-flex items-center gap-1 mx-1 bg-slate-100 p-0.5 rounded shadow-inner">
+                {(dynamicInputs[option]?.[pIdx] || [""]).map((val, vIdx) => (
+                  <React.Fragment key={vIdx}>
+                    <select
+                      value={val}
+                      onChange={(e) => updateDynamicInputValue(option, pIdx, vIdx, e.target.value)}
+                      onClick={(e) => e.stopPropagation()}
+                      className="inline-block px-1 py-0.5 bg-white border border-slate-300 rounded focus:ring-2 focus:ring-red-500 outline-none text-xs w-12 text-center font-bold"
+                    >
+                      <option value="">XX</option>
+                      {Array.from({ length: 99 }, (_, i) => {
+                        const num = (i + 1).toString().padStart(2, '0');
+                        return <option key={num} value={num}>{num}</option>;
+                      })}
+                    </select>
+                    {vIdx < (dynamicInputs[option]?.[pIdx]?.length || 1) - 1 && <span className="text-slate-500 font-bold">,</span>}
+                  </React.Fragment>
+                ))}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addPlaceholderValue(option, pIdx);
+                  }}
+                  className="p-0.5 hover:bg-slate-200 rounded text-red-600 transition-colors"
+                  title="Adicionar mais números"
+                >
+                  <Plus size={14} strokeWidth={3} />
+                </button>
+              </div>
             )}
           </React.Fragment>
         ))}
@@ -71,11 +102,12 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
     if (!option.includes('XX')) return option;
     const parts = option.split('XX');
     let result = '';
-    parts.forEach((part, idx) => {
+    parts.forEach((part, pIdx) => {
       result += part;
-      if (idx < parts.length - 1) {
-        const val = dynamicInputs[option]?.[idx] || "  ";
-        result += val;
+      if (pIdx < parts.length - 1) {
+        const values = dynamicInputs[option]?.[pIdx] || [""];
+        const formatted = values.map(v => v || "  ").join(', ');
+        result += formatted;
       }
     });
     return result;
