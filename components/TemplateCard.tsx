@@ -75,6 +75,7 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
     if (upper.includes('CONTRATO')) return 8;
     if (upper.includes('REGISTRO Nº')) return 8;
     if (upper.includes('R-')) return 3;
+    if (upper.includes('CERTIDÃO DIGITAL')) return 20;
     return undefined;
   };
 
@@ -103,7 +104,7 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
                         maxLength={mLen}
                         onChange={(e) => updateDynamicInputValue(optionKey, pIdx, vIdx, e.target.value, mLen)}
                         onClick={(e) => e.stopPropagation()}
-                        className={`inline-block px-1 py-0.5 bg-white border border-slate-300 rounded focus:ring-2 focus:ring-red-500 outline-none text-xs text-center font-bold ${mLen ? `w-[${Math.max(3, mLen * 0.7)}rem]` : 'w-12'}`}
+                        className={`inline-block px-1 py-0.5 bg-white border border-slate-300 rounded focus:ring-2 focus:ring-red-500 outline-none text-xs text-center font-bold`}
                         style={{ width: mLen ? `${Math.max(3, mLen * 0.6)}rem` : '3rem' }}
                       />
                       {vIdx < (dynamicInputs[optionKey]?.[pIdx]?.length || 1) - 1 && <span className="text-slate-500 font-bold">,</span>}
@@ -180,7 +181,7 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
   
   if (hasToggle && activeToggleOption) {
     finalMessageBody = activeToggleOption.message;
-    fullTextToCopy = template.subtitle ? `${template.subtitle}\n\n${finalMessageBody}` : finalMessageBody;
+    fullTextToCopy = template.subtitle ? `${template.subtitle}\n\n${getProcessedText(finalMessageBody, activeToggleValue!)}` : getProcessedText(finalMessageBody, activeToggleValue!);
   } else if (hasMultiSelect) {
     const orderedSelections = template.multiSelectOptions!
         .filter(opt => selectedOptions.includes(opt));
@@ -316,7 +317,7 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
               </div>
             ) : (
               <div className="p-4 animate-in fade-in duration-300">
-                {renderTextWithInputs(template.message || "", "__MESSAGE__")}
+                {renderTextWithInputs(finalMessageBody || template.message || "", activeToggleValue || "__MESSAGE__")}
               </div>
             )}
         </div>

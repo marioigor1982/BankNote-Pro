@@ -172,22 +172,7 @@ const INITIAL_TEMPLATES: NoteTemplate[] = [
       {
         label: 'CP',
         value: 'cp',
-        message: `SOLICITADO CERTIDÃO DIGITAL XXXXXXXXXXX, AGUARDANDO DISPONIBILIZAÇÃO.
-
-PARA CONFERÊNCIA TOTAL DO REGISTRO DO CONTRATO E POSTERIOR ENVIO PARA LIBERAÇÃO DO RECURSO, FOI SOLICITADO MATRÍCULA DO IMÓVEL INTERNAMENTE, SEM NECESSIDADE DE ATUAÇÃO DO CLIENTE.
-
-APÓS DISPONIBILIZAÇÃO DA CERTIDÃO, A PROPOSTA SERÁ AVANÇADA.*
-
-PREZADOS, REALIZADA A VALIDAÇÃO DO CONTRATO REGISTRADO, OS DOCUMENTOS APRESENTADOS ESTÃO DE ACORDO WITH AS DEFINIÇÕES DO BANCO SANTANDER.
-
-REGISTRO DA ALIENAÇÃO FIDUCIÁRIA DO IMÓVEL A FAVOR DO BANCO SANTANDER, SOB O Nº R-
-
-DADOS BANCÁRIOS NO SISTEMA AG C/C DE ACORDO COM CONTRATO REGISTRADO`
-      },
-      {
-        label: 'Aquisição',
-        value: 'aquisicao',
-        message: `SOLICITADO CERTIDÃO DIGITAL XXXXXXXXXXX, AGUARDANDO DISPONIBILIZAÇÃO.
+        message: `SOLICITADO CERTIDÃO DIGITAL XX, AGUARDANDO DISPONIBILIZAÇÃO.
 
 PARA CONFERÊNCIA TOTAL DO REGISTRO DO CONTRATO E POSTERIOR ENVIO PARA LIBERAÇÃO DO RECURSO, FOI SOLICITADO MATRÍCULA DO IMÓVEL INTERNAMENTE, SEM NECESSIDADE DE ATUAÇÃO DO CLIENTE.
 
@@ -195,11 +180,26 @@ APÓS DISPONIBILIZAÇÃO DA CERTIDÃO, A PROPOSTA SERÁ AVANÇADA.*
 
 PREZADOS, REALIZADA A VALIDAÇÃO DO CONTRATO REGISTRADO, OS DOCUMENTOS APRESENTADOS ESTÃO DE ACORDO COM AS DEFINIÇÕES DO BANCO SANTANDER.
 
-REGISTRO DA COMPRA E VENDA DO IMÓVEL COM OS DADOS CORRETOS, SOB O N º R-
+REGISTRO DA ALIENAÇÃO FIDUCIÁRIA DO IMÓVEL A FAVOR DO BANCO SANTANDER, SOB O Nº R- XX.
 
-REGISTRO DA ALIENAÇÃO FIDUCIÁRIA DO IMÓVEL A FAVOR DO BANCO SANTANDER, SOB O Nº R-
+DADOS BANCÁRIOS NO SISTEMA AG C/C DE ACORDO COM CONTRATO REGISTRADO.`
+      },
+      {
+        label: 'Aquisição',
+        value: 'aquisicao',
+        message: `SOLICITADO CERTIDÃO DIGITAL XX, AGUARDANDO DISPONIBILIZAÇÃO.
 
-DADOS BANCÁRIOS NO SISTEMA AG C/C DE ACORDO COM CONTRATO REGISTRADO`
+PARA CONFERÊNCIA TOTAL DO REGISTRO DO CONTRATO E POSTERIOR ENVIO PARA LIBERAÇÃO DO RECURSO, FOI SOLICITADO MATRÍCULA DO IMÓVEL INTERNAMENTE, SEM NECESSIDADE DE ATUAÇÃO DO CLIENTE.
+
+APÓS DISPONIBILIZAÇÃO DA CERTIDÃO, A PROPOSTA SERÁ AVANÇADA.*
+
+PREZADOS, REALIZADA A VALIDAÇÃO DO CONTRATO REGISTRADO, OS DOCUMENTOS APRESENTADOS ESTÃO DE ACORDO COM AS DEFINIÇÕES DO BANCO SANTANDER.
+
+REGISTRO DA COMPRA E VENDA DO IMÓVEL COM OS DADOS CORRETOS, SOB O N º R- XX.
+
+REGISTRO DA ALIENAÇÃO FIDUCIÁRIA DO IMÓVEL A FAVOR DO BANCO SANTANDER, SOB O Nº R- XX.
+
+DADOS BANCÁRIOS NO SISTEMA AG C/C DE ACORDO COM CONTRATO REGISTRADO.`
       }
     ]
   },
@@ -224,7 +224,7 @@ DADOS BANCÁRIOS NO SISTEMA AG C/C DE ACORDO COM CONTRATO REGISTRADO.`
     title: 'COMPROVANTE PADRÃO',
     category: 'general',
     subtitle: 'CONFIRMAÇÃO DE PAGAMENTO',
-    message: `PAGAMENTO REALIZADO WITH SUCESSO.
+    message: `PAGAMENTO REALIZADO COM SUCESSO.
 
 SEGUE EM ANEXO O COMPROVANTE DE TRANSFERÊNCIA BANCÁRIA REFERENTE AO CONTRATO Nº [NÚMERO].
 
@@ -242,7 +242,7 @@ VALOR: R$ [VALOR]`
       body: `Financeiro, bom dia!
 
 
-Favor seguir with o pagamento manual para o procurador conforme formulário 1704, procuração e contrato registrado anexos.
+Favor seguir com o pagamento manual para o procurador conforme formulário 1704, procuração e contrato registrado anexos.
 
 
 OBS.: Após aprovação, nos retornar para o avanço da fase. Gentileza “ flegar” pagamento manual.`
@@ -258,7 +258,7 @@ OBS.: Após aprovação, nos retornar para o avanço da fase. Gentileza “ fleg
       subject: 'CONTINGÊNCIA | PROPOSTA XX.XXX.XXX | PAGAMENTO POR GUIA JUDICIAL | ESPÓLIO DE XXXXXX XXXXX XXXXXX | PROCESSO XXXXXXXXXXXXXXXXXXXX',
       body: `Financeiro, bom dia!
 
-Favor seguir with o pagamento referente ESPÓLIO DE MARINA DUARTE DO PRADO, via GUIA JUDICIAL anexa.
+Favor seguir com o pagamento referente ESPÓLIO DE MARINA DUARTE DO PRADO, via GUIA JUDICIAL anexa.
 
 Processo: 10063570620208260704
 ID 081020000179580929.
@@ -544,14 +544,14 @@ function App() {
                   </ul>
                   <h4 className="text-lg font-bold text-red-800 border-b border-red-100 pb-1 mb-3 mt-6">ESTADO CIVIL</h4>
                   <ul className="list-disc pl-5 space-y-1 text-slate-600">
-                    <li><strong>Solteiro:</strong> Checar união estável. Estrangeiro precisa de RNE/Passaporte with visto.</li>
+                    <li><strong>Solteiro:</strong> Checar união estável. Estrangeiro precisa de RNE/Passaporte com visto.</li>
                     <li><strong>Casado:</strong> Pacto antenupcial se Comunhão Universal (após 1977) ou Separação Total.</li>
                   </ul>
                 </div>
                 <div>
                    <h4 className="text-lg font-bold text-red-800 border-b border-red-100 pb-1 mb-3">IMÓVEL</h4>
                   <ul className="list-disc pl-5 space-y-1 text-slate-600">
-                    <li><strong>Matrícula:</strong> Em nome dos vendedores, with averbação da construção. Válida por 30 dias.</li>
+                    <li><strong>Matrícula:</strong> Em nome dos vendedores, com averbação da construção. Válida por 30 dias.</li>
                     <li><strong>IPTU:</strong> Ano vigente ou anterior. Inscrição imobiliária conferida.</li>
                     <li><strong>Certidão de Tributos:</strong> Válida por 90 dias se não houver prazo expresso.</li>
                   </ul>
