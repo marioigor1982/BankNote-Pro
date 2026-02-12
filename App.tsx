@@ -172,7 +172,7 @@ const INITIAL_TEMPLATES: NoteTemplate[] = [
       {
         label: 'CP',
         value: 'cp',
-        message: `SOLICITADO CERTIDÃO DIGITAL XX, AGUARDANDO DISPONIBILIZAÇÃO.
+        message: `SOLICITADO CERTIDÃO DIGITAL XX , AGUARDANDO DISPONIBILIZAÇÃO.
 
 PARA CONFERÊNCIA TOTAL DO REGISTRO DO CONTRATO E POSTERIOR ENVIO PARA LIBERAÇÃO DO RECURSO, FOI SOLICITADO MATRÍCULA DO IMÓVEL INTERNAMENTE, SEM NECESSIDADE DE ATUAÇÃO DO CLIENTE.
 
@@ -187,7 +187,7 @@ DADOS BANCÁRIOS NO SISTEMA AG C/C DE ACORDO COM CONTRATO REGISTRADO.`
       {
         label: 'Aquisição',
         value: 'aquisicao',
-        message: `SOLICITADO CERTIDÃO DIGITAL XX, AGUARDANDO DISPONIBILIZAÇÃO.
+        message: `SOLICITADO CERTIDÃO DIGITAL XX , AGUARDANDO DISPONIBILIZAÇÃO.
 
 PARA CONFERÊNCIA TOTAL DO REGISTRO DO CONTRATO E POSTERIOR ENVIO PARA LIBERAÇÃO DO RECURSO, FOI SOLICITADO MATRÍCULA DO IMÓVEL INTERNAMENTE, SEM NECESSIDADE DE ATUAÇÃO DO CLIENTE.
 
@@ -507,7 +507,7 @@ function App() {
 
               {activeTemplate && (
                 <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-                  <TemplateCard template={activeTemplate} />
+                  <TemplateCard key={activeTemplate.id} template={activeTemplate} />
                 </div>
               )}
             </div>

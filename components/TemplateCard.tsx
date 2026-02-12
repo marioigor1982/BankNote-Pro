@@ -31,17 +31,18 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
     );
   };
 
-  const updateDynamicInputValue = (option: string, placeholderIdx: number, valueIdx: number, value: string, maxLength?: number) => {
-    // Only allow numbers
-    let numericValue = value.replace(/\D/g, '');
+  const updateDynamicInputValue = (option: string, placeholderIdx: number, valueIdx: number, value: string, maxLength?: number, allowAlpha?: boolean) => {
+    // Sanitize value: allow numbers and letters if allowAlpha is true, otherwise only numbers
+    let sanitizedValue = allowAlpha ? value.toUpperCase() : value.replace(/\D/g, '');
+    
     if (maxLength) {
-      numericValue = numericValue.slice(0, maxLength);
+      sanitizedValue = sanitizedValue.slice(0, maxLength);
     }
     
     setDynamicInputs(prev => {
       const optionStore = { ...(prev[option] || {}) };
       const placeholderStore = [...(optionStore[placeholderIdx] || [""])];
-      placeholderStore[valueIdx] = numericValue;
+      placeholderStore[valueIdx] = sanitizedValue;
       optionStore[placeholderIdx] = placeholderStore;
       return { ...prev, [option]: optionStore };
     });
@@ -72,11 +73,16 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
   const getMaxLength = (partBefore: string) => {
     const upper = partBefore.toUpperCase();
     if (upper.includes('MATRÍCULA')) return 10;
-    if (upper.includes('CONTRATO')) return 8;
+    if (upper.includes('CONTRATO')) return 12;
     if (upper.includes('REGISTRO Nº')) return 8;
     if (upper.includes('R-')) return 3;
-    if (upper.includes('CERTIDÃO DIGITAL')) return 20;
+    if (upper.includes('CERTIDÃO DIGITAL')) return 12;
     return undefined;
+  };
+
+  const shouldAllowAlpha = (partBefore: string) => {
+    const upper = partBefore.toUpperCase();
+    return upper.includes('CERTIDÃO DIGITAL');
   };
 
   const renderTextWithInputs = (text: string, optionKey: string) => {
@@ -89,6 +95,7 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
       <div className="font-mono text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
         {parts.map((part, pIdx) => {
           const mLen = getMaxLength(part);
+          const aAlpha = shouldAllowAlpha(part);
           return (
             <React.Fragment key={pIdx}>
               {part}
@@ -98,14 +105,14 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
                     <div key={vIdx} className="flex items-center gap-1">
                       <input
                         type="text"
-                        inputMode="numeric"
+                        inputMode={aAlpha ? "text" : "numeric"}
                         value={val}
                         placeholder="XX"
                         maxLength={mLen}
-                        onChange={(e) => updateDynamicInputValue(optionKey, pIdx, vIdx, e.target.value, mLen)}
+                        onChange={(e) => updateDynamicInputValue(optionKey, pIdx, vIdx, e.target.value, mLen, aAlpha)}
                         onClick={(e) => e.stopPropagation()}
                         className={`inline-block px-1 py-0.5 bg-white border border-slate-300 rounded focus:ring-2 focus:ring-red-500 outline-none text-xs text-center font-bold`}
-                        style={{ width: mLen ? `${Math.max(3, mLen * 0.6)}rem` : '3rem' }}
+                        style={{ width: mLen ? `${Math.max(3.5, mLen * 0.65)}rem` : '3.5rem' }}
                       />
                       {vIdx < (dynamicInputs[optionKey]?.[pIdx]?.length || 1) - 1 && <span className="text-slate-500 font-bold">,</span>}
                       {(dynamicInputs[optionKey]?.[pIdx]?.length || 1) > 1 && (
@@ -181,22 +188,22 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
   
   if (hasToggle && activeToggleOption) {
     finalMessageBody = activeToggleOption.message;
-    fullTextToCopy = template.subtitle ? `${template.subtitle}\n\n${getProcessedText(finalMessageBody, activeToggleValue!)}` : getProcessedText(finalMessageBody, activeToggleValue!);
+    const processedBody = getProcessedText(finalMessageBody, activeToggleValue!);
+    fullTextToCopy = template.subtitle ? `${template.subtitle}\n\n${processedBody}` : processedBody;
   } else if (hasMultiSelect) {
     const orderedSelections = template.multiSelectOptions!
         .filter(opt => selectedOptions.includes(opt));
     
-    if (template.disableAutoNumbering) {
-        finalMessageBody = orderedSelections.map(opt => getProcessedText(opt, opt)).join('\n\n');
-    } else {
-        finalMessageBody = orderedSelections
-            .map((opt, index) => `${index + 1}. ${getProcessedText(opt, opt)}`)
-            .join('\n\n');
-    }
-        
+    const processedLines = orderedSelections.map((opt, index) => {
+      const text = getProcessedText(opt, opt);
+      return template.disableAutoNumbering ? text : `${index + 1}. ${text}`;
+    });
+    
+    finalMessageBody = processedLines.join('\n\n');
     fullTextToCopy = template.subtitle ? `${template.subtitle}\n\n${finalMessageBody}` : finalMessageBody;
   } else if (!hasTable && !isEmail) {
-     fullTextToCopy = template.subtitle ? `${template.subtitle}\n\n${getProcessedText(template.message || "", "__MESSAGE__")}` : getProcessedText(template.message || "", "__MESSAGE__");
+     const processedBody = getProcessedText(template.message || "", "__MESSAGE__");
+     fullTextToCopy = template.subtitle ? `${template.subtitle}\n\n${processedBody}` : processedBody;
   }
 
   const isCopyDisabled = hasMultiSelect && selectedOptions.length === 0;
