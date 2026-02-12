@@ -15,7 +15,8 @@ import {
   CheckCircle,
   XCircle,
   FileText,
-  HandCoins
+  HandCoins,
+  ChevronRight
 } from 'lucide-react';
 
 // --- CATEGORIES CONFIGURATION ---
@@ -23,9 +24,9 @@ const CATEGORIES: Category[] = [
   {
     id: 'ccb',
     title: 'CCB – USECASA, USEIMÓVEL',
-    icon: HandCoins, // Ícone de empréstimo/dinheiro
+    icon: HandCoins,
     color: 'bg-red-600',
-    description: 'Validações de crédito imobiliário e pendências.'
+    description: 'Imóvel como garantia do Empréstimo.'
   },
   {
     id: 'aquisicao',
@@ -66,14 +67,13 @@ const CATEGORIES: Category[] = [
 
 // --- INITIAL TEMPLATES ---
 const INITIAL_TEMPLATES: NoteTemplate[] = [
-  // --- CCB CATEGORY ---
   {
     id: 'ccb-1',
     categoryId: 'ccb',
     title: 'APROVAÇÃO',
     category: 'approval',
     subtitle: 'APROVAÇÃO SEM RESSALVAS',
-    message: `PREZADOS, REALIZADA A VALIDAÇÃO DO CONTRATO REGISTRADO, OS DOCUMENTOS APRESENTADOS ESTÃO DE ACORDO WITH AS DEFINIÇÕES DO BANCO SANTANDER.
+    message: `PREZADOS, REALIZADA A VALIDAÇÃO DO CONTRATO REGISTRADO, OS DOCUMENTOS APRESENTADOS ESTÃO DE ACORDO COM AS DEFINIÇÕES DO BANCO SANTANDER.
 
 REGISTRO DA ALIENAÇÃO FIDUCIÁRIA DO IMÓVEL A FAVOR DO BANCO SANTANDER, SOB O Nº R-
 
@@ -104,8 +104,6 @@ O PROCESSO SEGUIRÁ COM A LIBERAÇÃO DO RECURSO AO VENDEDOR / PROPONENTE, PORÉ
       "PREZADOS PRENOTAÇÃO ANEXADA, AGUARDANDO CORREÇÃO. APÓS ANEXAR CONTRATO REGISTRADO CORRIGIDO E MATRÍCULA ATUALIZADA COM TODAS AS AVERBAÇÕES E REGISTRO DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER ATUAREMOS NA CONFERÊNCIA DE REGISTRO."
     ]
   },
-
-  // --- AQUISIÇÃO CATEGORY ---
   {
     id: 'aquisicao-1',
     categoryId: 'aquisicao',
@@ -132,7 +130,7 @@ O PROCESSO SEGUIRÁ COM A LIBERAÇÃO DO RECURSO AO VENDEDOR / PROPONENTE, PORÉ
     multiSelectOptions: [
       "FORMULÁRIO 1704 IRREGULAR. OBSERVE QUE O FORMULÁRIO FOI ASSINADO DIGITALMENTE, ENQUANTO O CONTRATO REGISTRADO POSSUI ASSINATURA MANUSCRITA. A MODALIDADE DE ASSINATURA DO FORMULÁRIO DEVE SER IDÊNTICA À DO CONTRATO APRESENTADO.",
       "PREZADO(A)(S), O CONTRATO E A MATRÍCULA INDEXADOS ESTÃO CORROMPIDOS, IMPOSSIBILITANDO EFETUAR DOWNLOAD E VISUALIZAÇÃO. GENTILEZA INDEXAR NOVAMENTE O CONTRATO E MATRÍCULA NOS SEUS RESPECTIVOS CAMPOS.",
-      "CONTRATO INCOMPLETO. GENTILEZA NOTAR QUE FOI INDEXADO SOMENTE AS PÁGINAS ÍMPARES DO CONTRATO REGISTRADO, FAVOR INDEXAR CONTRATO COMPLETO WITH AS 19 PÁGINAS PARA ANÁLISE.",
+      "CONTRATO INCOMPLETO. GENTILEZA NOTAR QUE FOI INDEXADO SOMENTE AS PÁGINAS ÍMPARES DO CONTRATO REGISTRADO, FAVOR INDEXAR CONTRATO COMPLETO COM AS 19 PÁGINAS PARA ANÁLISE.",
       "MATRÍCULA INCOMPLETA, FAVOR INDEXAR MATRÍCULA COMPLETA COM TODOS OS REGISTROS E AVERBAÇÕES DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER (BRASIL) S/A.",
       "MATRÍCULA DESATUALIZADA. PREZADOS GENTILEZA, NOTAR QUE A MATRÍCULA INDEXADA NÃO ESTÁ ATUALIZADA. FAVOR INDEXAR MATRÍCULA ATUALIZADA COM TODOS OS REGISTROS E AVERBAÇÕES DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER (BRASIL) S/A.",
       "PREZADOS GENTILEZA, NOTAR QUE PARA SEGUIRMOS COM A ANÁLISE É NECESSÁRIO INDEXAR A VIA NEGOCIÁVEL DA CÉDULA DE CRÉDITO BANCÁRIA REGISTRADA.",
@@ -155,8 +153,6 @@ O PROCESSO SEGUIRÁ COM A LIBERAÇÃO DO RECURSO AO VENDEDOR / PROPONENTE, PORÉ
       "PREZADOS PRENOTAÇÃO ANEXADA, AGUARDANDO CORREÇÃO. APÓS ANEXAR CONTRATO REGISTRADO CORRIGIDO E MATRÍCULA ATUALIZADA COM TODAS AS AVERBAÇÕES E REGISTRO DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER ATUAREMOS NA CONFERÊNCIA DE REGISTRO."
     ]
   },
-
-  // --- ARISP CATEGORY ---
   {
     id: 'arisp-1',
     categoryId: 'arisp',
@@ -202,7 +198,7 @@ DADOS BANCÁRIOS NO SISTEMA AG C/C DE ACORDO COM CONTRATO REGISTRADO`
     categoryId: 'arisp',
     title: 'SITE ARISP/ ONR INDISPONÍVEL (FORA DO AR)',
     category: 'general',
-    message: `SITE DA ARISP INDISPONIVEL. NÃO SENDO POSSIVEL SEGUIR WITH A APROVAÇÃO DA CONFERÊNCIA DE REGISTRO.
+    message: `SITE DA ARISP INDISPONIVEL. NÃO SENDO POSSIVEL SEGUIR COM A APROVAÇÃO DA CONFERÊNCIA DE REGISTRO.
 
 PREZADOS, REALIZADA A VALIDAÇÃO DO CONTRATO REGISTRADO, OS DOCUMENTOS APRESENTADOS ESTÃO DE ACORDO COM AS DEFINIÇÕES DO BANCO SANTANDER.
 
@@ -212,8 +208,6 @@ REGISTRO DA ALIENAÇÃO FIDUCIÁRIA DO IMÓVEL A FAVOR DO BANCO SANTANDER, SOB O
 
 DADOS BANCÁRIOS NO SISTEMA AG C/C DE ACORDO COM CONTRATO REGISTRADO.`
   },
-
-  // --- PAGAMENTO CATEGORY ---
   {
     id: 'pagamento-1',
     categoryId: 'pagamento',
@@ -227,8 +221,6 @@ SEGUE EM ANEXO O COMPROVANTE DE TRANSFERÊNCIA BANCÁRIA REFERENTE AO CONTRATO N
 DATA DA TRANSAÇÃO: [DATA]
 VALOR: R$ [VALOR]`
   },
-
-  // --- EMAILS CATEGORY ---
   {
     id: 'email-1',
     categoryId: 'emails',
@@ -286,8 +278,6 @@ No anexo, segue a matrícula com informação constante na mesma.
 Informamos que a proposta se encontra em pausa para avanço até a segunda ordem.`
     }
   },
-
-  // --- TABELA CATEGORY ---
   {
     id: 'tabela-1',
     categoryId: 'tabela',
@@ -313,12 +303,8 @@ Informamos que a proposta se encontra em pausa para avanço até a segunda ordem
   }
 ];
 
-// --- HELPER FOR SMART SEARCH ---
 const normalizeText = (text: string) => {
-  return text
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
+  return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 };
 
 function App() {
@@ -328,39 +314,20 @@ function App() {
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  // Clock Timer
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentDate(new Date());
-    }, 1000);
+    const timer = setInterval(() => setCurrentDate(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
-  // Format Date and Time
   const formattedDateTime = useMemo(() => {
-    const dateStr = currentDate.toLocaleDateString('pt-BR', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    });
-    
-    const timeStr = currentDate.toLocaleTimeString('pt-BR', {
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-
-    const capitalizedDate = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
-    
-    return `${capitalizedDate} - ${timeStr}`;
+    const dateStr = currentDate.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    const timeStr = currentDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    return `${dateStr.charAt(0).toUpperCase() + dateStr.slice(1)} - ${timeStr}`;
   }, [currentDate]);
   
-  // Search Logic (Smart Filtering)
   const searchResults = useMemo(() => {
     if (!searchQuery.trim()) return [];
-    
     const terms = normalizeText(searchQuery).split(" ").filter(t => t.length > 0);
-    
     return INITIAL_TEMPLATES.filter(t => {
       let rawContent = `${t.title} ${t.subtitle || ''} ${t.message || ''}`;
       if (t.multiSelectOptions) rawContent += " " + t.multiSelectOptions.join(" ");
@@ -371,7 +338,6 @@ function App() {
     });
   }, [searchQuery]);
 
-  // Templates Logic (Category based)
   const categoryTemplates = useMemo(() => {
     if (!selectedCategory) return [];
     return INITIAL_TEMPLATES.filter(t => t.categoryId === selectedCategory);
@@ -387,60 +353,42 @@ function App() {
   const selectCategory = (categoryId: string) => {
     setSelectedCategory(categoryId);
     const templates = INITIAL_TEMPLATES.filter(t => t.categoryId === categoryId);
-    if (templates.length > 0) {
-        setActiveTemplateId(templates[0].id);
-    } else {
-        setActiveTemplateId(null);
-    }
+    if (templates.length > 0) setActiveTemplateId(templates[0].id);
+    else setActiveTemplateId(null);
   };
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 pb-20 font-sans relative selection:bg-red-100 selection:text-red-900">
-      
-      {/* Header */}
       <header className="bg-red-600 border-b border-red-700 sticky top-0 z-20 shadow-md transition-colors">
-        <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2 flex-shrink-0 cursor-pointer" onClick={() => setSelectedCategory(null)}>
             <ShieldCheck className="text-white" size={28} />
             <h1 className="text-xl font-bold tracking-tight text-white hidden sm:block">
               Bank<span className="opacity-90">Note</span> Pro
             </h1>
           </div>
-
-          {/* Search Bar */}
           <div className="flex-1 max-w-md relative">
             <div className="relative group">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-red-600 transition-colors" size={18} />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-white transition-colors" size={18} />
               <input 
                 type="text"
                 placeholder="Pesquisar comentários, pendências..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-white border border-transparent rounded-full pl-10 pr-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400 transition-all text-slate-900 placeholder:text-slate-400 shadow-inner"
+                className="w-full bg-white/10 border border-white/20 rounded-full pl-10 pr-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white/30 transition-all text-white placeholder:text-slate-300 shadow-inner"
               />
               {searchQuery && (
-                <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300 hover:text-white">
                   <X size={16} />
                 </button>
               )}
             </div>
           </div>
-
           <div className="flex items-center gap-2 flex-shrink-0">
-            <a 
-              href="https://pf.santander.aceservices.accenture.com/lgn/realms/imobpf/protocol/openid-connect/auth?response_type=code&client_id=mortgage"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-3 py-2 text-red-600 bg-white hover:bg-slate-100 rounded-lg transition-all font-bold border border-white shadow-sm hover:shadow active:scale-[0.98]"
-              title="Acessar Sistema SCI"
-            >
+            <a href="https://pf.santander.aceservices.accenture.com/lgn/realms/imobpf/protocol/openid-connect/auth?response_type=code&client_id=mortgage" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-2 text-red-600 bg-white hover:bg-slate-100 rounded-lg transition-all font-bold border border-white shadow-sm hover:shadow active:scale-[0.98]">
               <span className="hidden sm:inline text-sm">SCI</span>
             </a>
-            <button 
-              onClick={() => setShowInfoModal(true)}
-              className="flex items-center gap-2 px-3 py-2 text-white bg-white/10 hover:bg-white/20 rounded-lg transition-all font-medium border border-white/30"
-              title="Informações do Analista"
-            >
+            <button onClick={() => setShowInfoModal(true)} className="flex items-center gap-2 px-3 py-2 text-white bg-white/10 hover:bg-white/20 rounded-lg transition-all font-medium border border-white/30">
               <Info size={20} />
               <span className="hidden sm:inline text-sm">Info</span>
             </button>
@@ -448,62 +396,37 @@ function App() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 py-8 relative z-10">
-        
-        {/* VIEW: SEARCH RESULTS */}
+      <main className="max-w-6xl mx-auto px-4 py-8 relative z-10">
         {searchQuery && (
           <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
              <div className="mb-6">
-                <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-                  <Search className="text-red-600" size={24} />
-                  Resultados da Pesquisa
-                </h2>
-                <p className="text-sm text-slate-500">
-                  {searchResults.length} resultado(s) encontrado(s) para "{searchQuery}"
-                </p>
+                <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2"><Search className="text-red-600" size={24} /> Resultados da Pesquisa</h2>
+                <p className="text-sm text-slate-500">{searchResults.length} resultado(s) encontrado(s) para "{searchQuery}"</p>
              </div>
-             
              <div className="grid gap-6">
-                {searchResults.map((template) => (
-                  <TemplateCard key={template.id} template={template} />
-                ))}
-                {searchResults.length === 0 && (
-                  <div className="text-center py-12 bg-white rounded-xl border border-dashed border-slate-300">
-                    <p className="text-slate-400">Nenhum resultado encontrado.</p>
-                  </div>
-                )}
+                {searchResults.map((template) => <TemplateCard key={template.id} template={template} />)}
+                {searchResults.length === 0 && <div className="text-center py-12 bg-white rounded-xl border border-dashed border-slate-300"><p className="text-slate-400">Nenhum resultado encontrado.</p></div>}
              </div>
           </div>
         )}
 
-        {/* VIEW: CATEGORY DASHBOARD */}
         {!selectedCategory && !searchQuery && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            
             <div className="mb-8 text-center bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
               <h2 className="text-2xl font-bold text-slate-800 mb-2">Comentário Banco</h2>
               <p className="text-slate-600 font-medium">Selecione o tipo de produto para acessar os modelos.</p>
             </div>
-            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {CATEGORIES.map((cat) => {
                 const Icon = cat.icon;
                 return (
-                  <button
-                    key={cat.id}
-                    onClick={() => selectCategory(cat.id)}
-                    className="group bg-red-600 p-6 rounded-xl shadow-md border border-red-700 hover:bg-red-700 hover:shadow-xl transition-all text-left flex items-start gap-4 duration-300"
-                  >
+                  <button key={cat.id} onClick={() => selectCategory(cat.id)} className="group bg-red-600 p-6 rounded-xl shadow-md border border-red-700 hover:bg-red-700 hover:shadow-xl transition-all text-left flex items-start gap-4 duration-300">
                     <div className="p-3 rounded-lg bg-white/10 text-white shadow-inner group-hover:scale-110 transition-transform duration-300">
                       <Icon size={24} />
                     </div>
                     <div>
-                      <h3 className="font-bold text-white text-lg">
-                        {cat.title}
-                      </h3>
-                      <p className="text-sm text-white/80 mt-1 leading-relaxed">
-                        {cat.description}
-                      </p>
+                      <h3 className="font-bold text-white text-lg">{cat.title}</h3>
+                      <p className="text-sm text-white/80 mt-1 leading-relaxed">{cat.description}</p>
                     </div>
                   </button>
                 );
@@ -512,62 +435,80 @@ function App() {
           </div>
         )}
 
-        {/* VIEW: TEMPLATE LIST / TABS */}
         {selectedCategory && activeCategoryData && !searchQuery && (
-          <div className="animate-in fade-in slide-in-from-right-8 duration-300">
-            <div className="mb-6 flex items-center gap-4">
-              <button onClick={() => setSelectedCategory(null)} className="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-500">
-                <ArrowLeft size={24} />
-              </button>
-              <div>
-                <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-                  <activeCategoryData.icon className="text-red-600" size={24} />
+          <div className="flex flex-col lg:flex-row gap-8 animate-in fade-in duration-300">
+            {/* Sidebar with Quick Links */}
+            <aside className="w-full lg:w-72 flex-shrink-0">
+              <div className="sticky top-24">
+                <button onClick={() => setSelectedCategory(null)} className="flex items-center gap-2 mb-6 text-slate-600 hover:text-red-600 font-bold transition-colors group">
+                  <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+                  <span>Voltar ao Menu</span>
+                </button>
+                <div className="space-y-2">
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Próximos Itens</p>
+                  {CATEGORIES.filter(c => c.id !== selectedCategory).map(cat => (
+                    <button
+                      key={cat.id}
+                      onClick={() => selectCategory(cat.id)}
+                      className="w-full flex items-center justify-between p-3 rounded-lg bg-red-600 text-white font-bold text-sm shadow-sm hover:bg-red-700 transition-all group"
+                    >
+                      <span className="flex-1 text-left">{cat.title}</span>
+                      <ChevronRight size={16} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </aside>
+
+            {/* Main Content Area */}
+            <div className="flex-1 animate-in slide-in-from-right-8 duration-300">
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
+                  <div className="p-2 bg-red-600 text-white rounded-lg shadow-sm">
+                    <activeCategoryData.icon size={24} />
+                  </div>
                   {activeCategoryData.title}
                 </h2>
-                <p className="text-sm text-slate-500">Selecione a ação desejada abaixo</p>
+                <p className="text-sm text-slate-500 mt-2">{activeCategoryData.description}</p>
               </div>
+
+              {categoryTemplates.length > 1 && (
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {categoryTemplates.map(template => {
+                    const isActive = activeTemplate?.id === template.id;
+                    const Icon = template.category === 'approval' ? CheckCircle : (template.category === 'rejection' ? XCircle : FileText);
+                    const colorClass = isActive 
+                      ? (template.category === 'approval' ? "bg-green-600 text-white border-green-600" : "bg-red-600 text-white border-red-600")
+                      : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50";
+
+                    return (
+                      <button
+                        key={template.id}
+                        onClick={() => setActiveTemplateId(template.id)}
+                        className={`px-4 py-2.5 rounded-xl font-bold text-xs transition-all duration-200 border flex items-center gap-2 shadow-sm ${colorClass} ${isActive ? 'ring-2 ring-offset-2 ring-slate-200' : ''}`}
+                      >
+                        <Icon size={16} />
+                        {template.title}
+                      </button>
+                    )
+                  })}
+                </div>
+              )}
+
+              {activeTemplate && (
+                <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                  <TemplateCard template={activeTemplate} />
+                </div>
+              )}
             </div>
-
-            {categoryTemplates.length > 1 && (
-              <div className="flex flex-wrap gap-3 mb-6">
-                {categoryTemplates.map(template => {
-                  const isActive = activeTemplate?.id === template.id;
-                  let colorClass = isActive ? "bg-red-600 text-white border-red-600 shadow-md ring-2 ring-red-200" : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50";
-                  const Icon = template.category === 'approval' ? CheckCircle : (template.category === 'rejection' ? XCircle : FileText);
-                  
-                  if (isActive) {
-                    if (template.category === 'approval') colorClass = "bg-green-600 text-white border-green-600 shadow-md ring-2 ring-green-200";
-                  }
-
-                  return (
-                    <button
-                      key={template.id}
-                      onClick={() => setActiveTemplateId(template.id)}
-                      className={`px-5 py-3 rounded-xl font-bold text-sm transition-all duration-200 border flex items-center gap-2 ${colorClass}`}
-                    >
-                      <Icon size={18} />
-                      {template.title}
-                    </button>
-                  )
-                })}
-              </div>
-            )}
-
-            {activeTemplate && (
-              <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-                <TemplateCard template={activeTemplate} />
-              </div>
-            )}
           </div>
         )}
       </main>
 
-      {/* Footer */}
       <footer className="fixed bottom-0 left-0 right-0 bg-red-600 border-t border-red-700 py-3 text-center text-white text-sm font-bold z-30 shadow-[0_-2px_10px_rgba(0,0,0,0.1)]">
         {formattedDateTime}
       </footer>
 
-      {/* MODAL DE INFORMAÇÕES */}
       {showInfoModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
