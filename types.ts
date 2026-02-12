@@ -11,6 +11,12 @@ export interface EmailData {
   body: string;
 }
 
+export interface ToggleOption {
+  label: string;
+  value: string;
+  message: string;
+}
+
 export interface NoteTemplate {
   id: string;
   categoryId: string; // Links the template to a main category folder
@@ -23,6 +29,7 @@ export interface NoteTemplate {
   disableAutoNumbering?: boolean; // If true, disables "1. ", "2. " prefixes in multi-select
   tableData?: TableRow[]; // Specific data for consultation tables
   emailData?: EmailData; // Specific structure for emails
+  toggleOptions?: ToggleOption[]; // Options to switch between different messages in the same template
 }
 
 export interface GenerationRequest {

@@ -10,16 +10,18 @@ interface TemplateCardProps {
 
 export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }) => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-  // Initialize recipients with template default if available
   const [recipients, setRecipients] = useState(template.emailData?.to || '');
   const [imageErrors, setImageErrors] = useState<Record<number, boolean>>({});
+  
+  // Toggle support
+  const hasToggle = template.toggleOptions && template.toggleOptions.length > 0;
+  const [activeToggleValue, setActiveToggleValue] = useState(hasToggle ? template.toggleOptions![0].value : null);
 
   const isRejection = template.category === 'rejection';
   const hasMultiSelect = template.multiSelectOptions && template.multiSelectOptions.length > 0;
   const hasTable = template.tableData && template.tableData.length > 0;
   const isEmail = template.category === 'email' && !!template.emailData;
 
-  // Toggle selection logic
   const toggleOption = (option: string) => {
     setSelectedOptions(prev => 
       prev.includes(option) 
@@ -37,13 +39,11 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
     
     const subject = encodeURIComponent(template.emailData.subject);
     const body = encodeURIComponent(template.emailData.body);
-    const to = recipients; // Basicamente passa a string digitada (ex: a@a.com; b@b.com)
+    const to = recipients;
     
-    // mailto link construction
     window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
   };
 
-  // Determine styles based on category
   const subtitleStyles = isRejection 
     ? 'bg-red-50 border-red-100 text-red-800'
     : 'bg-green-50 border-green-100 text-green-800';
@@ -51,11 +51,17 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
   const SubtitleIcon = isRejection ? XCircle : CheckCircle;
   const iconColor = isRejection ? 'text-red-600' : 'text-green-600';
 
-  // Construct final text (Only relevant if NOT a table and NOT email)
   let finalMessageBody = template.message || "";
   let fullTextToCopy = "";
+
+  const activeToggleOption = template.toggleOptions?.find(opt => opt.value === activeToggleValue);
   
-  if (hasMultiSelect) {
+  if (hasToggle && activeToggleOption) {
+    finalMessageBody = activeToggleOption.message;
+    fullTextToCopy = template.subtitle 
+      ? `${template.subtitle}\n\n${finalMessageBody}` 
+      : finalMessageBody;
+  } else if (hasMultiSelect) {
     const orderedSelections = template.multiSelectOptions!
         .filter(opt => selectedOptions.includes(opt));
     
@@ -76,10 +82,8 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
       : template.message || "";
   }
 
-  // Validation
   const isCopyDisabled = hasMultiSelect && selectedOptions.length === 0;
 
-  // Header Icon Logic
   const getHeaderIcon = () => {
     if (isEmail) return <Mail size={20} />;
     if (hasTable) return <Building2 size={20} />;
@@ -93,7 +97,7 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-shadow duration-300 flex flex-col h-full">
+    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-shadow duration-300 flex flex-col h-full animate-in fade-in zoom-in-95 duration-200">
       {/* Header */}
       <div className="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -121,6 +125,26 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
           <div className={`flex items-center gap-3 p-3 border rounded-lg ${subtitleStyles}`}>
             <SubtitleIcon className={`flex-shrink-0 ${iconColor}`} size={20} />
             <span className="font-bold tracking-wide text-sm md:text-base">{template.subtitle}</span>
+          </div>
+        )}
+
+        {/* Toggle Option UI */}
+        {hasToggle && (
+          <div className="flex p-1 bg-slate-100 rounded-lg w-full max-w-xs self-center shadow-inner">
+            {template.toggleOptions!.map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => setActiveToggleValue(opt.value)}
+                className={`
+                  flex-1 py-1.5 text-xs font-bold rounded-md transition-all duration-200
+                  ${activeToggleValue === opt.value 
+                    ? 'bg-red-600 text-white shadow-sm scale-105' 
+                    : 'text-slate-500 hover:text-slate-700'}
+                `}
+              >
+                {opt.label}
+              </button>
+            ))}
           </div>
         )}
 
@@ -167,7 +191,6 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
             ) : isEmail ? (
               // EMAIL VIEW
               <div className="p-4 space-y-4">
-                {/* Recipients Input */}
                 <div>
                   <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Destinatários</label>
                   <input 
@@ -178,16 +201,12 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
                     className="w-full text-sm p-2 border border-slate-300 rounded focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none"
                   />
                 </div>
-
-                {/* Subject Display */}
                 <div>
                   <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Assunto</label>
                   <div className="p-2 bg-white border border-slate-200 rounded text-sm font-bold text-slate-800">
                     {template.emailData?.subject}
                   </div>
                 </div>
-
-                {/* Body Display */}
                 <div>
                   <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Corpo do E-mail</label>
                   <div className="p-3 bg-white border border-slate-200 rounded text-sm text-slate-700 font-mono whitespace-pre-wrap">
@@ -227,10 +246,10 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
               </div>
 
             ) : (
-              // STANDARD TEXT VIEW
+              // STANDARD OR TOGGLE TEXT VIEW
               <div className="p-4">
-                <pre className="font-mono text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
-                  {template.message}
+                <pre className="font-mono text-sm text-slate-700 whitespace-pre-wrap leading-relaxed animate-in fade-in duration-300">
+                  {finalMessageBody}
                 </pre>
               </div>
             )}
