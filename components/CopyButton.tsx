@@ -4,9 +4,10 @@ import { Copy, Check } from 'lucide-react';
 interface CopyButtonProps {
   textToCopy: string;
   disabled?: boolean;
+  onCopy?: () => void;
 }
 
-export const CopyButton: React.FC<CopyButtonProps> = ({ textToCopy, disabled = false }) => {
+export const CopyButton: React.FC<CopyButtonProps> = ({ textToCopy, disabled = false, onCopy }) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = useCallback(async () => {
@@ -15,11 +16,17 @@ export const CopyButton: React.FC<CopyButtonProps> = ({ textToCopy, disabled = f
     try {
       await navigator.clipboard.writeText(textToCopy);
       setCopied(true);
+      
+      // Executa a callback após a cópia, se fornecida
+      if (onCopy) {
+        onCopy();
+      }
+      
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error('Failed to copy text: ', err);
     }
-  }, [textToCopy, disabled]);
+  }, [textToCopy, disabled, onCopy]);
 
   return (
     <button

@@ -84,6 +84,13 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
 
   const isCopyDisabled = hasMultiSelect && selectedOptions.length === 0;
 
+  // Função para limpar seleções após copiar
+  const handleOnCopy = () => {
+    if (hasMultiSelect) {
+      setSelectedOptions([]);
+    }
+  };
+
   const getHeaderIcon = () => {
     if (isEmail) return <Mail size={20} />;
     if (hasTable) return <Building2 size={20} />;
@@ -267,12 +274,17 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
             </button>
             <CopyButton 
               textToCopy={template.emailData?.body || ""} 
-              disabled={false} 
+              disabled={false}
+              onCopy={handleOnCopy}
             />
           </div>
         ) : !hasTable && (
           <div className="mt-auto pt-2">
-              <CopyButton textToCopy={fullTextToCopy} disabled={isCopyDisabled} />
+              <CopyButton 
+                textToCopy={fullTextToCopy} 
+                disabled={isCopyDisabled} 
+                onCopy={handleOnCopy}
+              />
           </div>
         )}
       </div>
