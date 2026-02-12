@@ -89,6 +89,10 @@ O PROCESSO SEGUIRÁ COM A LIBERAÇÃO DO RECURSO AO VENDEDOR / PROPONENTE, PORÉ
     subtitle: 'RECUSA COM PENDÊNCIAS',
     message: '',
     multiSelectOptions: [
+      "CONTRATO REGISTRADO SEM ASSINATURA, FAVOR PROVIDENCIAR AS ASSINATURAS DE TODOS OS PROPONETES PARA PROSSEGUIRMOS.",
+      "FORMULÁRIO 1704 SEM ASSINATURA. FAVOR PROVIDENCIAR A ASSINATURA DO FORMULÁRIO 1704,POIS PRECISA SER IGUAL A ASSINATURA DO CONTRATO REGISTRADO.",
+      "PREZADO(A)(S), O CONTRATO REGISTRADO ESTÁ CORROMPIDO, IMPOSSIBILITANDO EFETUAR DOWNLOAD E VISUALIZAÇÃO. GENTILEZA INDEXAR NOVAMENTE O CONTRATO NO SEU RESPECTIVO CAMPO.",
+      "PREZADO(A)(S), A MATRÍCULA INDEXADA ESTÁ CORROMPIDA, IMPOSSIBILITANDO EFETUAR DOWNLOAD E VISUALIZAÇÃO. GENTILEZA INDEXAR NOVAMENTE A MATRÍCULA NO SEU RESPECTIVO CAMPO.",
       "CONTRATO INCOMPLETO. GENTILEZA NOTAR QUE FOI INDEXADO SOMENTE AS PÁGINAS ÍMPARES DO CONTRATO REGISTRADO, FAVOR INDEXAR CONTRATO COMPLETO COM AS 19 PÁGINAS PARA ANÁLISE.",
       "MATRÍCULA INCOMPLETA, FAVOR INDEXAR MATRÍCULA COMPLETA COM TODOS OS REGISTROS E AVERBAÇÕES DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER (BRASIL) S/A.",
       "MATRÍCULA DESATUALIZADA. PREZADOS GENTILEZA, NOTAR QUE A MATRÍCULA INDEXADA NÃO ESTÁ ATUALIZADA. FAVOR INDEXAR MATRÍCULA ATUALIZADA COM TODOS OS REGISTROS E AVERBAÇÕES DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER (BRASIL) S/A.",
@@ -128,12 +132,15 @@ O PROCESSO SEGUIRÁ COM A LIBERAÇÃO DO RECURSO AO VENDEDOR / PROPONENTE, PORÉ
     subtitle: 'RECUSA COM PENDÊNCIAS',
     message: '', 
     multiSelectOptions: [
+      "CONTRATO REGISTRADO SEM ASSINATURA, FAVOR PROVIDENCIAR AS ASSINATURAS DE TODOS OS PROPONETES PARA PROSSEGUIRMOS.",
+      "FORMULÁRIO 1704 SEM ASSINATURA. FAVOR PROVIDENCIAR A ASSINATURA DO FORMULÁRIO 1704,POIS PRECISA SER IGUAL A ASSINATURA DO CONTRATO REGISTRADO.",
+      "PREZADO(A)(S), O CONTRATO REGISTRADO ESTÁ CORROMPIDO, IMPOSSIBILITANDO EFETUAR DOWNLOAD E VISUALIZAÇÃO. GENTILEZA INDEXAR NOVAMENTE O CONTRATO NO SEU RESPECTIVO CAMPO.",
+      "PREZADO(A)(S), A MATRÍCULA INDEXADA ESTÁ CORROMPIDA, IMPOSSIBILITANDO EFETUAR DOWNLOAD E VISUALIZAÇÃO. GENTILEZA INDEXAR NOVAMENTE A MATRÍCULA NO SEU RESPECTIVO CAMPO.",
       "FORMULÁRIO 1704 IRREGULAR. OBSERVE QUE O FORMULÁRIO FOI ASSINADO DIGITALMENTE, ENQUANTO O CONTRATO REGISTRADO POSSUI ASSINATURA MANUSCRITA. A MODALIDADE DE ASSINATURA DO FORMULÁRIO DEVE SER IDÊNTICA À DO CONTRATO APRESENTADO.",
       "PREZADO(A)(S), O CONTRATO E A MATRÍCULA INDEXADOS ESTÃO CORROMPIDOS, IMPOSSIBILITANDO EFETUAR DOWNLOAD E VISUALIZAÇÃO. GENTILEZA INDEXAR NOVAMENTE O CONTRATO E MATRÍCULA NOS SEUS RESPECTIVOS CAMPOS.",
       "CONTRATO INCOMPLETO. GENTILEZA NOTAR QUE FOI INDEXADO SOMENTE AS PÁGINAS ÍMPARES DO CONTRATO REGISTRADO, FAVOR INDEXAR CONTRATO COMPLETO COM AS 19 PÁGINAS PARA ANÁLISE.",
       "MATRÍCULA INCOMPLETA, FAVOR INDEXAR MATRÍCULA COMPLETA COM TODOS OS REGISTROS E AVERBAÇÕES DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER (BRASIL) S/A.",
       "MATRÍCULA DESATUALIZADA. PREZADOS GENTILEZA, NOTAR QUE A MATRÍCULA INDEXADA NÃO ESTÁ ATUALIZADA. FAVOR INDEXAR MATRÍCULA ATUALIZADA COM TODOS OS REGISTROS E AVERBAÇÕES DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER (BRASIL) S/A.",
-      "PREZADOS GENTILEZA, NOTAR QUE PARA SEGUIRMOS COM A ANÁLISE É NECESSÁRIO INDEXAR A VIA NEGOCIÁVEL DA CÉDULA DE CRÉDITO BANCÁRIA REGISTRADA.",
       "CONTRATO INCOMPLETO. GENTILEZA NOTAR QUE FOI INDEXADO SOMENTE AS PÁGINAS ÍMPARES DO CONTRATO REGISTRADO, FAVOR INDEXAR CONTRATO COMPLETO COM AS XX PÁGINAS PARA ANÁLISE.",
       "CONTRATO REGISTRADO NÃO INDEXADO - FAVOR INDEXAR O CONTRATO REGISTRADO PARA ANÁLISE.",
       "FALTA MATRÍCULA - FAVOR INDEXAR A MATRÍCULA ATUALIZADA COM TODAS AS AVERBAÇÕES E REGISTROS DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER BRASIL) S/A.",
@@ -359,7 +366,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 pb-20 font-sans relative selection:bg-red-100 selection:text-red-900">
-      <header className="bg-red-600 border-b border-red-700 sticky top-0 z-20 shadow-md transition-colors">
+      <header className="bg-red-600 sticky top-0 z-20 shadow-md transition-colors">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
           <div className="flex items-center gap-2 flex-shrink-0 cursor-pointer" onClick={() => setSelectedCategory(null)}>
             <ShieldCheck className="text-white" size={28} />
@@ -375,7 +382,7 @@ function App() {
                 placeholder="Pesquisar comentários, pendências..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-white/10 border border-white/20 rounded-full pl-10 pr-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white/30 transition-all text-white placeholder:text-slate-300 shadow-inner"
+                className="w-full bg-white/10 border border-transparent rounded-full pl-10 pr-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white/30 transition-all text-white placeholder:text-slate-300 shadow-inner"
               />
               {searchQuery && (
                 <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300 hover:text-white">
@@ -385,10 +392,10 @@ function App() {
             </div>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
-            <a href="https://pf.santander.aceservices.accenture.com/lgn/realms/imobpf/protocol/openid-connect/auth?response_type=code&client_id=mortgage" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-2 text-red-600 bg-white hover:bg-slate-100 rounded-lg transition-all font-bold border border-white shadow-sm hover:shadow active:scale-[0.98]">
+            <a href="https://pf.santander.aceservices.accenture.com/lgn/realms/imobpf/protocol/openid-connect/auth?response_type=code&client_id=mortgage" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-2 text-red-600 bg-white hover:bg-slate-100 rounded-lg transition-all font-bold shadow-sm hover:shadow active:scale-[0.98]">
               <span className="hidden sm:inline text-sm">SCI</span>
             </a>
-            <button onClick={() => setShowInfoModal(true)} className="flex items-center gap-2 px-3 py-2 text-white bg-white/10 hover:bg-white/20 rounded-lg transition-all font-medium border border-white/30">
+            <button onClick={() => setShowInfoModal(true)} className="flex items-center gap-2 px-3 py-2 text-white bg-white/10 hover:bg-white/20 rounded-lg transition-all font-medium border border-transparent">
               <Info size={20} />
               <span className="hidden sm:inline text-sm">Info</span>
             </button>
@@ -405,14 +412,14 @@ function App() {
              </div>
              <div className="grid gap-6">
                 {searchResults.map((template) => <TemplateCard key={template.id} template={template} />)}
-                {searchResults.length === 0 && <div className="text-center py-12 bg-white rounded-xl border border-dashed border-slate-300"><p className="text-slate-400">Nenhum resultado encontrado.</p></div>}
+                {searchResults.length === 0 && <div className="text-center py-12 bg-white rounded-xl border border-dashed border-slate-300 shadow-sm"><p className="text-slate-400">Nenhum resultado encontrado.</p></div>}
              </div>
           </div>
         )}
 
         {!selectedCategory && !searchQuery && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="mb-8 text-center bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+            <div className="mb-8 text-center bg-white p-6 rounded-2xl shadow-sm">
               <h2 className="text-2xl font-bold text-slate-800 mb-2">Comentário Banco</h2>
               <p className="text-slate-600 font-medium">Selecione o tipo de produto para acessar os modelos.</p>
             </div>
@@ -420,7 +427,7 @@ function App() {
               {CATEGORIES.map((cat) => {
                 const Icon = cat.icon;
                 return (
-                  <button key={cat.id} onClick={() => selectCategory(cat.id)} className="group bg-red-600 p-6 rounded-xl shadow-md border border-red-700 hover:bg-red-700 hover:shadow-xl transition-all text-left flex items-start gap-4 duration-300">
+                  <button key={cat.id} onClick={() => selectCategory(cat.id)} className="group bg-red-600 p-6 rounded-xl shadow-md hover:bg-red-700 hover:shadow-xl transition-all text-left flex items-start gap-4 duration-300">
                     <div className="p-3 rounded-lg bg-white/10 text-white shadow-inner group-hover:scale-110 transition-transform duration-300">
                       <Icon size={24} />
                     </div>
@@ -478,14 +485,14 @@ function App() {
                     const isActive = activeTemplate?.id === template.id;
                     const Icon = template.category === 'approval' ? CheckCircle : (template.category === 'rejection' ? XCircle : FileText);
                     const colorClass = isActive 
-                      ? (template.category === 'approval' ? "bg-green-600 text-white border-green-600" : "bg-red-600 text-white border-red-600")
-                      : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50";
+                      ? (template.category === 'approval' ? "bg-green-600 text-white" : "bg-red-600 text-white")
+                      : "bg-white text-slate-700 hover:bg-slate-50";
 
                     return (
                       <button
                         key={template.id}
                         onClick={() => setActiveTemplateId(template.id)}
-                        className={`px-4 py-2.5 rounded-xl font-bold text-xs transition-all duration-200 border flex items-center gap-2 shadow-sm ${colorClass} ${isActive ? 'ring-2 ring-offset-2 ring-slate-200' : ''}`}
+                        className={`px-4 py-2.5 rounded-xl font-bold text-xs transition-all duration-200 flex items-center gap-2 shadow-sm ${colorClass} ${isActive ? 'ring-2 ring-offset-2 ring-slate-200' : ''}`}
                       >
                         <Icon size={16} />
                         {template.title}
@@ -505,14 +512,14 @@ function App() {
         )}
       </main>
 
-      <footer className="fixed bottom-0 left-0 right-0 bg-red-600 border-t border-red-700 py-3 text-center text-white text-sm font-bold z-30 shadow-[0_-2px_10px_rgba(0,0,0,0.1)]">
+      <footer className="fixed bottom-0 left-0 right-0 bg-red-600 py-3 text-center text-white text-sm font-bold z-30 shadow-[0_-2px_10px_rgba(0,0,0,0.15)]">
         {formattedDateTime}
       </footer>
 
       {showInfoModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
-            <div className="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50 sticky top-0 z-10">
+            <div className="p-4 flex justify-between items-center bg-slate-50 sticky top-0 z-10 shadow-sm">
               <div className="flex items-center gap-2 text-red-800">
                 <Info size={24} />
                 <h3 className="text-xl font-bold">Informações e Checklist</h3>
@@ -522,7 +529,7 @@ function App() {
               </button>
             </div>
             <div className="p-6 overflow-y-auto custom-scrollbar text-slate-800 leading-relaxed text-sm">
-               <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 font-bold text-center uppercase tracking-wide">
+               <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 font-bold text-center uppercase tracking-wide shadow-inner">
                 *** ATENÇÃO ANALISTA, REVISE AS INFORMAÇÕES ***
               </div>
               <div className="grid md:grid-cols-2 gap-6">

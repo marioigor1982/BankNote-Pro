@@ -45,8 +45,8 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
   };
 
   const subtitleStyles = isRejection 
-    ? 'bg-red-50 border-red-100 text-red-800'
-    : 'bg-green-50 border-green-100 text-green-800';
+    ? 'bg-red-50 text-red-800'
+    : 'bg-green-50 text-green-800';
     
   const SubtitleIcon = isRejection ? XCircle : CheckCircle;
   const iconColor = isRejection ? 'text-red-600' : 'text-green-600';
@@ -104,9 +104,9 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-shadow duration-300 flex flex-col h-full animate-in fade-in zoom-in-95 duration-200">
+    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col h-full animate-in fade-in zoom-in-95 duration-200">
       {/* Header */}
-      <div className="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+      <div className="bg-slate-50 px-6 py-4 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">
           <div className={`p-2 rounded-lg ${getHeaderColor()}`}>
             {getHeaderIcon()}
@@ -129,7 +129,7 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
         
         {/* Subtitle / Status Section */}
         {template.subtitle && (
-          <div className={`flex items-center gap-3 p-3 border rounded-lg ${subtitleStyles}`}>
+          <div className={`flex items-center gap-3 p-3 rounded-lg shadow-inner ${subtitleStyles}`}>
             <SubtitleIcon className={`flex-shrink-0 ${iconColor}`} size={20} />
             <span className="font-bold tracking-wide text-sm md:text-base">{template.subtitle}</span>
           </div>
@@ -156,7 +156,7 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
         )}
 
         {/* Content Body */}
-        <div className={`bg-slate-50 rounded-lg border border-slate-200 p-0 relative group ${isEmail ? '' : 'max-h-[500px] overflow-y-auto custom-scrollbar'}`}>
+        <div className={`bg-slate-50 rounded-lg p-0 relative group shadow-inner ${isEmail ? '' : 'max-h-[500px] overflow-y-auto custom-scrollbar'}`}>
             
             {hasTable ? (
               // TABLE VIEW
@@ -164,14 +164,14 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
                 <table className="w-full text-sm text-left text-slate-600">
                   <thead className="text-xs text-slate-700 uppercase bg-slate-100 sticky top-0 z-10">
                     <tr>
-                      <th scope="col" className="px-6 py-3 border-b border-slate-200">FEBRABAN</th>
-                      <th scope="col" className="px-6 py-3 border-b border-slate-200">CÓDIGO</th>
-                      <th scope="col" className="px-6 py-3 border-b border-slate-200">NOME</th>
+                      <th scope="col" className="px-6 py-3">FEBRABAN</th>
+                      <th scope="col" className="px-6 py-3">CÓDIGO</th>
+                      <th scope="col" className="px-6 py-3">NOME</th>
                     </tr>
                   </thead>
                   <tbody>
                     {template.tableData!.map((row, idx) => (
-                      <tr key={idx} className="bg-white border-b border-slate-100 hover:bg-blue-50 transition-colors">
+                      <tr key={idx} className="bg-white border-b border-slate-50 hover:bg-blue-50 transition-colors">
                         <td className="px-6 py-4 font-mono font-medium text-slate-900">{row.col1}</td>
                         <td className="px-6 py-4 font-mono text-slate-500">{row.col2}</td>
                         <td className="px-6 py-4 flex items-center gap-3">
@@ -205,18 +205,18 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
                     value={recipients}
                     onChange={(e) => setRecipients(e.target.value)}
                     placeholder="ex: joao@email.com; maria@email.com"
-                    className="w-full text-sm p-2 border border-slate-300 rounded focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none"
+                    className="w-full text-sm p-2 border-transparent bg-white rounded shadow-sm focus:ring-2 focus:ring-cyan-500 outline-none"
                   />
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Assunto</label>
-                  <div className="p-2 bg-white border border-slate-200 rounded text-sm font-bold text-slate-800">
+                  <div className="p-2 bg-white rounded text-sm font-bold text-slate-800 shadow-sm">
                     {template.emailData?.subject}
                   </div>
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Corpo do E-mail</label>
-                  <div className="p-3 bg-white border border-slate-200 rounded text-sm text-slate-700 font-mono whitespace-pre-wrap">
+                  <div className="p-3 bg-white rounded text-sm text-slate-700 font-mono whitespace-pre-wrap shadow-sm">
                     {template.emailData?.body}
                   </div>
                 </div>
@@ -235,10 +235,10 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
                       key={idx}
                       onClick={() => toggleOption(option)}
                       className={`
-                        flex items-start gap-3 p-3 rounded-md cursor-pointer transition-all border
+                        flex items-start gap-3 p-3 rounded-md cursor-pointer transition-all shadow-sm
                         ${isSelected 
-                          ? 'bg-blue-50 border-blue-300 shadow-sm' 
-                          : 'bg-white border-slate-200 hover:border-blue-300 hover:bg-slate-50'}
+                          ? 'bg-blue-50 ring-2 ring-blue-300' 
+                          : 'bg-white hover:bg-slate-50'}
                       `}
                     >
                       <div className={`mt-0.5 ${isSelected ? 'text-blue-600' : 'text-slate-400'}`}>
