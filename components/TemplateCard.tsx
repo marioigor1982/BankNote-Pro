@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NoteTemplate } from '../types';
 import { CopyButton } from './CopyButton';
-import { FileText, Trash2, CheckCircle, XCircle, Square, CheckSquare, Building2, Mail, ExternalLink, Plus } from 'lucide-react';
+import { FileText, Trash2, CheckCircle, XCircle, Square, CheckSquare, Building2, Mail, ExternalLink, Plus, Minus } from 'lucide-react';
 
 interface TemplateCardProps {
   template: NoteTemplate;
@@ -32,10 +32,13 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
   };
 
   const updateDynamicInputValue = (option: string, placeholderIdx: number, valueIdx: number, value: string) => {
+    // Only allow numbers
+    const numericValue = value.replace(/\D/g, '');
+    
     setDynamicInputs(prev => {
       const optionStore = { ...(prev[option] || {}) };
       const placeholderStore = [...(optionStore[placeholderIdx] || [""])];
-      placeholderStore[valueIdx] = value;
+      placeholderStore[valueIdx] = numericValue;
       optionStore[placeholderIdx] = placeholderStore;
       return { ...prev, [option]: optionStore };
     });
@@ -51,6 +54,18 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
     });
   };
 
+  const removePlaceholderValue = (option: string, placeholderIdx: number, valueIdx: number) => {
+    setDynamicInputs(prev => {
+      const optionStore = { ...(prev[option] || {}) };
+      const placeholderStore = [...(optionStore[placeholderIdx] || [""])];
+      if (placeholderStore.length > 1) {
+        placeholderStore.splice(valueIdx, 1);
+        optionStore[placeholderIdx] = placeholderStore;
+      }
+      return { ...prev, [option]: optionStore };
+    });
+  };
+
   const renderOptionWithInputs = (option: string) => {
     if (!option.includes('XX')) return <p className={`text-sm ${selectedOptions.includes(option) ? 'text-slate-800 font-medium' : 'text-slate-600'} whitespace-pre-wrap`}>{option}</p>;
 
@@ -61,23 +76,33 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
           <React.Fragment key={pIdx}>
             {part}
             {pIdx < parts.length - 1 && (
-              <div className="inline-flex items-center gap-1 mx-1 bg-slate-100 p-0.5 rounded shadow-inner">
+              <div className="inline-flex flex-wrap items-center gap-1 mx-1 bg-slate-100 p-1 rounded shadow-inner align-middle">
                 {(dynamicInputs[option]?.[pIdx] || [""]).map((val, vIdx) => (
-                  <React.Fragment key={vIdx}>
-                    <select
+                  <div key={vIdx} className="flex items-center gap-1">
+                    <input
+                      type="text"
+                      inputMode="numeric"
                       value={val}
+                      placeholder="XX"
                       onChange={(e) => updateDynamicInputValue(option, pIdx, vIdx, e.target.value)}
                       onClick={(e) => e.stopPropagation()}
-                      className="inline-block px-1 py-0.5 bg-white border border-slate-300 rounded focus:ring-2 focus:ring-red-500 outline-none text-xs w-12 text-center font-bold"
-                    >
-                      <option value="">XX</option>
-                      {Array.from({ length: 99 }, (_, i) => {
-                        const num = (i + 1).toString().padStart(2, '0');
-                        return <option key={num} value={num}>{num}</option>;
-                      })}
-                    </select>
+                      className="inline-block px-1 py-0.5 bg-white border border-slate-300 rounded focus:ring-2 focus:ring-red-500 outline-none text-xs min-w-[3rem] w-auto max-w-[8rem] text-center font-bold"
+                    />
                     {vIdx < (dynamicInputs[option]?.[pIdx]?.length || 1) - 1 && <span className="text-slate-500 font-bold">,</span>}
-                  </React.Fragment>
+                    {(dynamicInputs[option]?.[pIdx]?.length || 1) > 1 && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removePlaceholderValue(option, pIdx, vIdx);
+                        }}
+                        className="p-0.5 hover:bg-red-50 rounded text-red-400 hover:text-red-600 transition-colors"
+                        title="Remover número"
+                      >
+                        <Minus size={12} strokeWidth={3} />
+                      </button>
+                    )}
+                  </div>
                 ))}
                 <button
                   type="button"
@@ -265,7 +290,7 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
                   return (
                     <div key={idx} onClick={() => toggleOption(option)} className={`flex items-start gap-3 p-3 rounded-md cursor-pointer transition-all shadow-sm ${isSelected ? 'bg-blue-50 ring-2 ring-blue-300' : 'bg-white hover:bg-slate-50'}`}>
                       <div className={`mt-0.5 ${isSelected ? 'text-blue-600' : 'text-slate-400'}`}>{isSelected ? <CheckSquare size={20} /> : <Square size={20} />}</div>
-                      {renderOptionWithInputs(option)}
+                      <div className="flex-1">{renderOptionWithInputs(option)}</div>
                     </div>
                   );
                 })}
