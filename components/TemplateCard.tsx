@@ -31,9 +31,12 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
     );
   };
 
-  const updateDynamicInputValue = (option: string, placeholderIdx: number, valueIdx: number, value: string) => {
+  const updateDynamicInputValue = (option: string, placeholderIdx: number, valueIdx: number, value: string, maxLength?: number) => {
     // Only allow numbers
-    const numericValue = value.replace(/\D/g, '');
+    let numericValue = value.replace(/\D/g, '');
+    if (maxLength) {
+      numericValue = numericValue.slice(0, maxLength);
+    }
     
     setDynamicInputs(prev => {
       const optionStore = { ...(prev[option] || {}) };
@@ -66,71 +69,87 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
     });
   };
 
-  const renderOptionWithInputs = (option: string) => {
-    if (!option.includes('XX')) return <p className={`text-sm ${selectedOptions.includes(option) ? 'text-slate-800 font-medium' : 'text-slate-600'} whitespace-pre-wrap`}>{option}</p>;
+  const getMaxLength = (partBefore: string) => {
+    const upper = partBefore.toUpperCase();
+    if (upper.includes('MATRÍCULA')) return 10;
+    if (upper.includes('CONTRATO')) return 8;
+    if (upper.includes('REGISTRO Nº')) return 8;
+    if (upper.includes('R-')) return 3;
+    return undefined;
+  };
 
-    const parts = option.split('XX');
+  const renderTextWithInputs = (text: string, optionKey: string) => {
+    if (!text.includes('XX')) {
+      return <pre className="font-mono text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">{text}</pre>;
+    }
+
+    const parts = text.split('XX');
     return (
-      <div className={`text-sm leading-relaxed ${selectedOptions.includes(option) ? 'text-slate-800 font-medium' : 'text-slate-600'}`}>
-        {parts.map((part, pIdx) => (
-          <React.Fragment key={pIdx}>
-            {part}
-            {pIdx < parts.length - 1 && (
-              <div className="inline-flex flex-wrap items-center gap-1 mx-1 bg-slate-100 p-1 rounded shadow-inner align-middle">
-                {(dynamicInputs[option]?.[pIdx] || [""]).map((val, vIdx) => (
-                  <div key={vIdx} className="flex items-center gap-1">
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      value={val}
-                      placeholder="XX"
-                      onChange={(e) => updateDynamicInputValue(option, pIdx, vIdx, e.target.value)}
-                      onClick={(e) => e.stopPropagation()}
-                      className="inline-block px-1 py-0.5 bg-white border border-slate-300 rounded focus:ring-2 focus:ring-red-500 outline-none text-xs min-w-[3rem] w-auto max-w-[8rem] text-center font-bold"
-                    />
-                    {vIdx < (dynamicInputs[option]?.[pIdx]?.length || 1) - 1 && <span className="text-slate-500 font-bold">,</span>}
-                    {(dynamicInputs[option]?.[pIdx]?.length || 1) > 1 && (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          removePlaceholderValue(option, pIdx, vIdx);
-                        }}
-                        className="p-0.5 hover:bg-red-50 rounded text-red-400 hover:text-red-600 transition-colors"
-                        title="Remover número"
-                      >
-                        <Minus size={12} strokeWidth={3} />
-                      </button>
-                    )}
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    addPlaceholderValue(option, pIdx);
-                  }}
-                  className="p-0.5 hover:bg-slate-200 rounded text-red-600 transition-colors"
-                  title="Adicionar mais números"
-                >
-                  <Plus size={14} strokeWidth={3} />
-                </button>
-              </div>
-            )}
-          </React.Fragment>
-        ))}
+      <div className="font-mono text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
+        {parts.map((part, pIdx) => {
+          const mLen = getMaxLength(part);
+          return (
+            <React.Fragment key={pIdx}>
+              {part}
+              {pIdx < parts.length - 1 && (
+                <div className="inline-flex flex-wrap items-center gap-1 mx-1 bg-slate-100 p-1 rounded shadow-inner align-middle not-italic">
+                  {(dynamicInputs[optionKey]?.[pIdx] || [""]).map((val, vIdx) => (
+                    <div key={vIdx} className="flex items-center gap-1">
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        value={val}
+                        placeholder="XX"
+                        maxLength={mLen}
+                        onChange={(e) => updateDynamicInputValue(optionKey, pIdx, vIdx, e.target.value, mLen)}
+                        onClick={(e) => e.stopPropagation()}
+                        className={`inline-block px-1 py-0.5 bg-white border border-slate-300 rounded focus:ring-2 focus:ring-red-500 outline-none text-xs text-center font-bold ${mLen ? `w-[${Math.max(3, mLen * 0.7)}rem]` : 'w-12'}`}
+                        style={{ width: mLen ? `${Math.max(3, mLen * 0.6)}rem` : '3rem' }}
+                      />
+                      {vIdx < (dynamicInputs[optionKey]?.[pIdx]?.length || 1) - 1 && <span className="text-slate-500 font-bold">,</span>}
+                      {(dynamicInputs[optionKey]?.[pIdx]?.length || 1) > 1 && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removePlaceholderValue(optionKey, pIdx, vIdx);
+                          }}
+                          className="p-0.5 hover:bg-red-50 rounded text-red-400 hover:text-red-600 transition-colors"
+                          title="Remover número"
+                        >
+                          <Minus size={12} strokeWidth={3} />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addPlaceholderValue(optionKey, pIdx);
+                    }}
+                    className="p-0.5 hover:bg-slate-200 rounded text-red-600 transition-colors"
+                    title="Adicionar mais números"
+                  >
+                    <Plus size={14} strokeWidth={3} />
+                  </button>
+                </div>
+              )}
+            </React.Fragment>
+          );
+        })}
       </div>
     );
   };
 
-  const getProcessedOptionText = (option: string) => {
-    if (!option.includes('XX')) return option;
-    const parts = option.split('XX');
+  const getProcessedText = (text: string, optionKey: string) => {
+    if (!text.includes('XX')) return text;
+    const parts = text.split('XX');
     let result = '';
     parts.forEach((part, pIdx) => {
       result += part;
       if (pIdx < parts.length - 1) {
-        const values = dynamicInputs[option]?.[pIdx] || [""];
+        const values = dynamicInputs[optionKey]?.[pIdx] || [""];
         const formatted = values.map(v => v || "  ").join(', ');
         result += formatted;
       }
@@ -167,16 +186,16 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
         .filter(opt => selectedOptions.includes(opt));
     
     if (template.disableAutoNumbering) {
-        finalMessageBody = orderedSelections.map(opt => getProcessedOptionText(opt)).join('\n\n');
+        finalMessageBody = orderedSelections.map(opt => getProcessedText(opt, opt)).join('\n\n');
     } else {
         finalMessageBody = orderedSelections
-            .map((opt, index) => `${index + 1}. ${getProcessedOptionText(opt)}`)
+            .map((opt, index) => `${index + 1}. ${getProcessedText(opt, opt)}`)
             .join('\n\n');
     }
         
     fullTextToCopy = template.subtitle ? `${template.subtitle}\n\n${finalMessageBody}` : finalMessageBody;
   } else if (!hasTable && !isEmail) {
-     fullTextToCopy = template.subtitle ? `${template.subtitle}\n\n${template.message}` : template.message || "";
+     fullTextToCopy = template.subtitle ? `${template.subtitle}\n\n${getProcessedText(template.message || "", "__MESSAGE__")}` : getProcessedText(template.message || "", "__MESSAGE__");
   }
 
   const isCopyDisabled = hasMultiSelect && selectedOptions.length === 0;
@@ -290,14 +309,14 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
                   return (
                     <div key={idx} onClick={() => toggleOption(option)} className={`flex items-start gap-3 p-3 rounded-md cursor-pointer transition-all shadow-sm ${isSelected ? 'bg-blue-50 ring-2 ring-blue-300' : 'bg-white hover:bg-slate-50'}`}>
                       <div className={`mt-0.5 ${isSelected ? 'text-blue-600' : 'text-slate-400'}`}>{isSelected ? <CheckSquare size={20} /> : <Square size={20} />}</div>
-                      <div className="flex-1">{renderOptionWithInputs(option)}</div>
+                      <div className="flex-1">{renderTextWithInputs(option, option)}</div>
                     </div>
                   );
                 })}
               </div>
             ) : (
-              <div className="p-4">
-                <pre className="font-mono text-sm text-slate-700 whitespace-pre-wrap leading-relaxed animate-in fade-in duration-300">{finalMessageBody}</pre>
+              <div className="p-4 animate-in fade-in duration-300">
+                {renderTextWithInputs(template.message || "", "__MESSAGE__")}
               </div>
             )}
         </div>
