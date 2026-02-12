@@ -423,8 +423,8 @@ function App() {
         {!selectedCategory && !searchQuery && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="mb-8 text-center bg-white p-6 rounded-2xl shadow-sm">
-              <h2 className="text-2xl font-bold text-slate-800 mb-2">Comentário Banco</h2>
-              <p className="text-slate-600 font-medium">Selecione o tipo de produto para acessar os modelos.</p>
+              <h2 className="text-2xl font-bold text-red-600 uppercase mb-2">Comentário Banco</h2>
+              <p className="text-slate-700 font-medium">Selecione o tipo de produto para acessar os modelos.</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {CATEGORIES.map((cat) => {

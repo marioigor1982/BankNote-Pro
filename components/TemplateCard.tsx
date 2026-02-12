@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { NoteTemplate } from '../types';
 import { CopyButton } from './CopyButton';
 import { FileText, Trash2, CheckCircle, XCircle, Square, CheckSquare, Building2, Mail, ExternalLink, Plus, Minus } from 'lucide-react';
@@ -82,7 +82,22 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
 
   const shouldAllowAlpha = (partBefore: string) => {
     const upper = partBefore.toUpperCase();
-    return upper.includes('CERTIDÃO DIGITAL');
+    return upper.includes('CERTIDÃO DIGITAL') || upper.includes('CONTRATO');
+  };
+
+  const getProcessedText = (text: string, optionKey: string) => {
+    if (!text.includes('XX')) return text;
+    const parts = text.split('XX');
+    let result = '';
+    parts.forEach((part, pIdx) => {
+      result += part;
+      if (pIdx < parts.length - 1) {
+        const values = dynamicInputs[optionKey]?.[pIdx] || [""];
+        const formatted = values.map(v => v || "XX").join(', ');
+        result += formatted;
+      }
+    });
+    return result;
   };
 
   const renderTextWithInputs = (text: string, optionKey: string) => {
@@ -112,7 +127,7 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
                         onChange={(e) => updateDynamicInputValue(optionKey, pIdx, vIdx, e.target.value, mLen, aAlpha)}
                         onClick={(e) => e.stopPropagation()}
                         className={`inline-block px-1 py-0.5 bg-white border border-slate-300 rounded focus:ring-2 focus:ring-red-500 outline-none text-xs text-center font-bold`}
-                        style={{ width: mLen ? `${Math.max(3.5, mLen * 0.65)}rem` : '3.5rem' }}
+                        style={{ width: mLen ? `${Math.max(4, mLen * 0.7)}rem` : '4rem' }}
                       />
                       {vIdx < (dynamicInputs[optionKey]?.[pIdx]?.length || 1) - 1 && <span className="text-slate-500 font-bold">,</span>}
                       {(dynamicInputs[optionKey]?.[pIdx]?.length || 1) > 1 && (
@@ -150,21 +165,6 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
     );
   };
 
-  const getProcessedText = (text: string, optionKey: string) => {
-    if (!text.includes('XX')) return text;
-    const parts = text.split('XX');
-    let result = '';
-    parts.forEach((part, pIdx) => {
-      result += part;
-      if (pIdx < parts.length - 1) {
-        const values = dynamicInputs[optionKey]?.[pIdx] || [""];
-        const formatted = values.map(v => v || "  ").join(', ');
-        result += formatted;
-      }
-    });
-    return result;
-  };
-
   const handleImageError = (index: number) => {
     setImageErrors(prev => ({ ...prev, [index]: true }));
   };
@@ -177,36 +177,34 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
     window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
   };
 
+  const fullTextToCopy = useMemo(() => {
+    let messageBody = "";
+    
+    if (hasToggle && activeToggleValue) {
+      const toggleOption = template.toggleOptions?.find(opt => opt.value === activeToggleValue);
+      if (toggleOption) {
+        messageBody = getProcessedText(toggleOption.message, activeToggleValue);
+      }
+    } else if (hasMultiSelect) {
+      const orderedSelections = template.multiSelectOptions!.filter(opt => selectedOptions.includes(opt));
+      const processedLines = orderedSelections.map((opt, index) => {
+        const text = getProcessedText(opt, opt);
+        return template.disableAutoNumbering ? text : `${index + 1}. ${text}`;
+      });
+      messageBody = processedLines.join('\n\n');
+    } else if (!hasTable && !isEmail) {
+      messageBody = getProcessedText(template.message || "", "__MESSAGE__");
+    }
+
+    if (!messageBody) return "";
+    return template.subtitle ? `${template.subtitle}\n\n${messageBody}` : messageBody;
+  }, [template, selectedOptions, dynamicInputs, activeToggleValue, hasToggle, hasMultiSelect, hasTable, isEmail]);
+
   const subtitleStyles = isRejection ? 'bg-red-50 text-red-800' : 'bg-green-50 text-green-800';
   const SubtitleIcon = isRejection ? XCircle : CheckCircle;
   const iconColor = isRejection ? 'text-red-600' : 'text-green-600';
 
-  let finalMessageBody = template.message || "";
-  let fullTextToCopy = "";
-
-  const activeToggleOption = template.toggleOptions?.find(opt => opt.value === activeToggleValue);
-  
-  if (hasToggle && activeToggleOption) {
-    finalMessageBody = activeToggleOption.message;
-    const processedBody = getProcessedText(finalMessageBody, activeToggleValue!);
-    fullTextToCopy = template.subtitle ? `${template.subtitle}\n\n${processedBody}` : processedBody;
-  } else if (hasMultiSelect) {
-    const orderedSelections = template.multiSelectOptions!
-        .filter(opt => selectedOptions.includes(opt));
-    
-    const processedLines = orderedSelections.map((opt, index) => {
-      const text = getProcessedText(opt, opt);
-      return template.disableAutoNumbering ? text : `${index + 1}. ${text}`;
-    });
-    
-    finalMessageBody = processedLines.join('\n\n');
-    fullTextToCopy = template.subtitle ? `${template.subtitle}\n\n${finalMessageBody}` : finalMessageBody;
-  } else if (!hasTable && !isEmail) {
-     const processedBody = getProcessedText(template.message || "", "__MESSAGE__");
-     fullTextToCopy = template.subtitle ? `${template.subtitle}\n\n${processedBody}` : processedBody;
-  }
-
-  const isCopyDisabled = hasMultiSelect && selectedOptions.length === 0;
+  const isCopyDisabled = (hasMultiSelect && selectedOptions.length === 0) || (!hasMultiSelect && !isEmail && !hasTable && !fullTextToCopy);
 
   const handleOnCopy = () => {
     if (hasMultiSelect) {
@@ -226,6 +224,8 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
     if (isRejection) return 'bg-red-100 text-red-600';
     return 'bg-blue-100 text-blue-600';
   };
+
+  const finalMessageBody = template.toggleOptions?.find(opt => opt.value === activeToggleValue)?.message || template.message || "";
 
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col h-full animate-in fade-in zoom-in-95 duration-200">
@@ -324,7 +324,7 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
               </div>
             ) : (
               <div className="p-4 animate-in fade-in duration-300">
-                {renderTextWithInputs(finalMessageBody || template.message || "", activeToggleValue || "__MESSAGE__")}
+                {renderTextWithInputs(finalMessageBody, activeToggleValue || "__MESSAGE__")}
               </div>
             )}
         </div>
