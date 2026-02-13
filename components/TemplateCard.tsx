@@ -23,6 +23,37 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
   const hasTable = template.tableData && template.tableData.length > 0;
   const isEmail = template.category === 'email' && !!template.emailData;
 
+  // Regra inteligente de saudação
+  const getSmartGreeting = () => {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const currentTimeInMinutes = hours * 60 + minutes;
+
+    // 00:00 até 11:59 ="Bom dia!"
+    if (currentTimeInMinutes < 12 * 60) {
+      return "Bom dia!";
+    }
+    // 12:00 até 18:29 ="Boa tarde!"
+    if (currentTimeInMinutes < 18 * 60 + 30) {
+      return "Boa tarde!";
+    }
+    // 18:30 até 23:59 = "Boa noite!"
+    return "Boa noite!";
+  };
+
+  const processEmailBody = (body: string) => {
+    if (!body) return "";
+    const greeting = getSmartGreeting();
+    // Substitui "Bom dia!" ou "bom dia!" (case-insensitive) pela saudação inteligente
+    return body.replace(/bom dia!/gi, greeting);
+  };
+
+  const processedEmailBody = useMemo(() => {
+    if (!isEmail || !template.emailData?.body) return "";
+    return processEmailBody(template.emailData.body);
+  }, [isEmail, template.emailData?.body]);
+
   const toggleOption = (option: string) => {
     setSelectedOptions(prev => 
       prev.includes(option) 
@@ -172,7 +203,7 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
   const handleOpenOutlook = () => {
     if (!template.emailData) return;
     const subject = encodeURIComponent(template.emailData.subject);
-    const body = encodeURIComponent(template.emailData.body);
+    const body = encodeURIComponent(processedEmailBody);
     const to = recipients;
     window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
   };
@@ -305,8 +336,13 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
                   <div className="p-2 bg-white rounded text-sm font-bold text-slate-800 shadow-sm">{template.emailData?.subject}</div>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Corpo do E-mail</label>
-                  <div className="p-3 bg-white rounded text-sm text-slate-700 font-mono whitespace-pre-wrap shadow-sm">{template.emailData?.body}</div>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-xs font-semibold text-slate-500 uppercase">Corpo do E-mail (Saudação Automática)</label>
+                    <span className="text-[10px] bg-cyan-100 text-cyan-700 px-1.5 py-0.5 rounded-full font-bold">SMART GREETING ATIVO</span>
+                  </div>
+                  <div className="p-3 bg-white rounded text-sm text-slate-700 font-mono whitespace-pre-wrap shadow-sm border-l-4 border-cyan-400">
+                    {processedEmailBody}
+                  </div>
                 </div>
               </div>
             ) : hasMultiSelect ? (
@@ -335,7 +371,7 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
               <ExternalLink size={18} />
               <span>Abrir no Outlook</span>
             </button>
-            <CopyButton textToCopy={template.emailData?.body || ""} disabled={false} onCopy={handleOnCopy} />
+            <CopyButton textToCopy={processedEmailBody} disabled={false} onCopy={handleOnCopy} />
           </div>
         ) : !hasTable && (
           <div className="mt-auto pt-2">
