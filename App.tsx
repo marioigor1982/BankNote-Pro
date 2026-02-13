@@ -19,6 +19,18 @@ import {
   ChevronRight
 } from 'lucide-react';
 
+// --- CUSTOM ICONS ---
+const ArispIcon = ({ className }: { className?: string }) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    viewBox="0 -960 960 960" 
+    className={className}
+    fill="currentColor"
+  >
+    <path d="M480-80q-140-35-230-162.5T160-522v-238l320-120 320 120v238q0 152-90 279.5T480-80Zm0-62q106-35 175.5-128.5T737-480H480v-335l-260 97v196q0 12 .5 20.5T223-480h257v338Z"/>
+  </svg>
+);
+
 // --- CATEGORIES CONFIGURATION ---
 const CATEGORIES: Category[] = [
   {
@@ -38,7 +50,7 @@ const CATEGORIES: Category[] = [
   {
     id: 'arisp',
     title: 'ARISP / CERTIDÕES',
-    icon: 'https://ridigital.org.br/assets/img/header/logo-header.svg',
+    icon: ArispIcon,
     color: 'bg-red-600',
     description: 'Solicitações e validações de certidões digitais.'
   },
@@ -54,7 +66,7 @@ const CATEGORIES: Category[] = [
     title: 'REDIGIR E-MAILS',
     icon: Mail,
     color: 'bg-red-600',
-    description: 'Modelos de e-mails para comunicação interna e externa.'
+    description: 'Modelos de e-mails para comunicação.'
   },
   {
     id: 'tabela',
@@ -76,7 +88,7 @@ O PROCESSO SEGUIRÁ COM A LIBERAÇÃO DO RECURSO AO VENDEDOR / PROPONENTE, PORÉ
 
 const APPROVAL_AQUISICAO_MESSAGE = `PREZADOS, REALIZADA A VALIDAÇÃO DO CONTRATO REGISTRADO, OS DOCUMENTOS APRESENTADOS ESTÃO DE ACORDO COM AS DEFINIÇÕES DO BANCO SANTANDER.
 
-REGISTRO DA COMPRA E VENDA DO IMÓVEL COM OS DADOS CORRETOS, SOB O N º R- XX.
+REGISTRO DA COMPRA E VENDA DO IMÓVEL WITH OS DADOS CORRETOS, SOB O N º R- XX.
 
 REGISTRO DA ALIENAÇÃO FIDUCIÁRIA DO IMÓVEL A FAVOR DO BANCO SANTANDER, SOB O Nº R- XX.
 
@@ -107,17 +119,17 @@ const INITIAL_TEMPLATES: NoteTemplate[] = [
       "PREZADO(A)(S), O CONTRATO REGISTRADO ESTÁ CORROMPIDO, IMPOSSIBILITANDO EFETUAR DOWNLOAD E VISUALIZAÇÃO. GENTILEZA INDEXAR NOVAMENTE O CONTRATO NO SEU RESPECTIVO CAMPO.",
       "PREZADO(A)(S), A MATRÍCULA INDEXADA ESTÁ CORROMPIDA, IMPOSSIBILITANDO EFETUAR DOWNLOAD E VISUALIZAÇÃO. GENTILEZA INDEXAR NOVAMENTE A MATRÍCULA NO SEU RESPECTIVO CAMPO.",
       "CONTRATO INCOMPLETO. GENTILEZA NOTAR QUE FALTOU A(S) PÁGINA(S) XX DO CONTRATO REGISTRADO, FAVOR INDEXAR CONTRATO COMPLETO COM AS XX PÁGINAS PARA ANÁLISE.",
-      "MATRÍCULA INCOMPLETA, FAVOR INDEXAR MATRÍCULA COMPLETA COM TODOS OS REGISTROS E AVERBAÇÕES DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER (BRASIL) S/A.",
-      "MATRÍCULA DESATUALIZADA. PREZADOS GENTILEZA, NOTAR QUE A MATRÍCULA INDEXADA NÃO ESTÁ ATUALIZADA. FAVOR INDEXAR MATRÍCULA ATUALIZADA COM TODOS OS REGISTROS E AVERBAÇÕES DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER (BRASIL) S/A.",
-      "PREZADOS GENTILEZA, NOTAR QUE PARA SEGUIRMOS COM A ANÁLISE É NECESSÁRIO INDEXAR A VIA NEGOCIÁVEL DA CÉDULA DE CRÉDITO BANCÁRIA REGISTRADA.",
+      "MATRÍCULA INCOMPLETA, FAVOR INDEXAR MATRÍCULA COMPLETA WITH TODOS OS REGISTROS E AVERBAÇÕES DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER (BRASIL) S/A.",
+      "MATRÍCULA DESATUALIZADA. PREZADOS GENTILEZA, NOTAR QUE A MATRÍCULA INDEXADA NÃO ESTÁ ATUALIZADA. FAVOR INDEXAR MATRÍCULA ATUALIZADA WITH TODOS OS REGISTROS E AVERBAÇÕES DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER (BRASIL) S/A.",
+      "PREZADOS GENTILEZA, NOTAR QUE PARA SEGUIRMOS WITH A ANÁLISE É NECESSÁRIO INDEXAR A VIA NEGOCIÁVEL DA CÉDULA DE CRÉDITO BANCÁRIA REGISTRADA.",
       "CONTRATO REGISTRADO NÃO INDEXADO - FAVOR INDEXAR O CONTRATO REGISTRADO PARA ANÁLISE.",
-      "FALTA MATRÍCULA - FAVOR INDEXAR A MATRÍCULA ATUALIZADA COM TODAS AS AVERBAÇÕES E REGISTROS DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER BRASIL) S/A.",
-      "CONSTA APENAS 01 ASSINATURA NO CAMPO CREDOR, FAVOR OBTER ASSINATURA DOS 02 REPRESENTANTES (CREDOR), POIS A REPRESENTAÇÃO SE FAZ COM A ASSINATURA EM CONJUNTO DE DOIS PROCURADORES.",
+      "FALTA MATRÍCULA - FAVOR INDEXAR A MATRÍCULA ATUALIZADA WITH TODAS AS AVERBAÇÕES E REGISTROS DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER BRASIL) S/A.",
+      "CONSTA APENAS 01 ASSINATURA NO CAMPO CREDOR, FAVOR OBTER ASSINATURA DOS 02 REPRESENTANTES (CREDOR), POIS A REPRESENTAÇÃO SE FAZ WITH A ASSINATURA EM CONJUNTO DE DOIS PROCURADORES.",
       "IDENTIFICAMOS UMA DIVERGÊNCIA ENTRE O VALOR DO SEU FINANCIAMENTO REGISTRADO EM CONTRATO E O VALOR CONSTANTE NA MATRÍCULA DO IMÓVEL.",
       "PARA REGULARIZAR ESTA SITUAÇÃO E GARANTIR QUE TODOS OS SEUS DADOS ESTEJAM CORRETOS, FAVOR LEVAR A MATRÍCULA AO RGI PARA CORREÇÃO NO REGISTRO Nº XX.",
       "O CONTRATO INDEXADO NÃO PERTENCE A PROPOSTA, FAVOR INDEXAR O CONTRATO XX PARA PROSSEGUIRMOS.",
       "A MATRÍCULA INDEXADA NÃO PERTECE A PROPOSTA, FAVOR INDEXAR A MATRÍCULA XX PARA PROSSEGUIRMOS.",
-      "PREZADOS PRENOTAÇÃO ANEXADA, AGUARDANDO CORREÇÃO. APÓS ANEXAR CONTRATO REGISTRADO CORRIGIDO E MATRÍCULA ATUALIZADA COM TODAS AS AVERBAÇÕES E REGISTRO DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER ATUAREMOS NA CONFERÊNCIA DE REGISTRO."
+      "PREZADOS PRENOTAÇÃO ANEXADA, AGUARDANDO CORREÇÃO. APÓS ANEXAR CONTRATO REGISTRADO CORRIGIDO E MATRÍCULA ATUALIZADA WITH TODAS AS AVERBAÇÕES E REGISTRO DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER ATUAREMOS NA CONFERÊNCIA DE REGISTRO."
     ]
   },
   {
@@ -140,27 +152,27 @@ const INITIAL_TEMPLATES: NoteTemplate[] = [
       "FORMULÁRIO 1704 SEM ASSINATURA. FAVOR PROVIDENCIAR A ASSINATURA DO FORMULÁRIO 1704,POIS PRECISA SER IGUAL A ASSINATURA DO CONTRATO REGISTRADO.",
       "PREZADO(A)(S), O CONTRATO REGISTRADO ESTÁ CORROMPIDO, IMPOSSIBILITANDO EFETUAR DOWNLOAD E VISUALIZAÇÃO. GENTILEZA INDEXAR NOVAMENTE O CONTRATO NO SEU RESPECTIVO CAMPO.",
       "PREZADO(A)(S), A MATRÍCULA INDEXADA ESTÁ CORROMPIDA, IMPOSSIBILITANDO EFETUAR DOWNLOAD E VISUALIZAÇÃO. GENTILEZA INDEXAR NOVAMENTE A MATRÍCULA NO SEU RESPECTIVO CAMPO.",
-      "CONTRATO INCOMPLETO. GENTILEZA NOTAR QUE FALTOU A(S) PÁGINA(S) XX DO CONTRATO REGISTRADO, FAVOR INDEXAR CONTRATO COMPLETO COM AS XX PÁGINAS PARA ANÁLISE.",
+      "CONTRATO INCOMPLETO. GENTILEZA NOTAR QUE FALTOU A(S) PÁGINA(S) XX DO CONTRATO REGISTRADO, FAVOR INDEXAR CONTRATO COMPLETO WITH AS XX PÁGINAS PARA ANÁLISE.",
       "FORMULÁRIO 1704 IRREGULAR. OBSERVE QUE O FORMULÁRIO FOI ASSINADO DIGITALMENTE, ENQUANTO O CONTRATO REGISTRADO POSSUI ASSINATURA MANUSCRITA. A MODALIDADE DE ASSINATURA DO FORMULÁRIO DEVE SER IDÊNTICA À DO CONTRATO APRESENTADO.",
       "PREZADO(A)(S), O CONTRATO E A MATRÍCULA INDEXADOS ESTÃO CORROMPIDOS, IMPOSSIBILITANDO EFETUAR DOWNLOAD E VISUALIZAÇÃO. GENTILEZA INDEXAR NOVAMENTE O CONTRATO E MATRÍCULA NOS SEUS RESPECTIVOS CAMPOS.",
-      "MATRÍCULA INCOMPLETA, FAVOR INDEXAR MATRÍCULA COMPLETA COM TODOS OS REGISTROS E AVERBAÇÕES DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER (BRASIL) S/A.",
-      "MATRÍCULA DESATUALIZADA. PREZADOS GENTILEZA, NOTAR QUE A MATRÍCULA INDEXADA NÃO ESTÁ ATUALIZADA. FAVOR INDEXAR MATRÍCULA ATUALIZADA COM TODOS OS REGISTROS E AVERBAÇÕES DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER (BRASIL) S/A.",
+      "MATRÍCULA INCOMPLETA, FAVOR INDEXAR MATRÍCULA COMPLETA WITH TODOS OS REGISTROS E AVERBAÇÕES DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER (BRASIL) S/A.",
+      "MATRÍCULA DESATUALIZADA. PREZADOS GENTILEZA, NOTAR QUE A MATRÍCULA INDEXADA NÃO ESTÁ ATUALIZADA. FAVOR INDEXAR MATRÍCULA ATUALIZADA WITH TODOS OS REGISTROS E AVERBAÇÕES DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER (BRASIL) S/A.",
       "CONTRATO REGISTRADO NÃO INDEXADO - FAVOR INDEXAR O CONTRATO REGISTRADO PARA ANÁLISE.",
-      "FALTA MATRÍCULA - FAVOR INDEXAR A MATRÍCULA ATUALIZADA COM TODAS AS AVERBAÇÕES E REGISTROS DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER BRASIL) S/A.",
-      "CONSTA APENAS 01 ASSINATURA NO CAMPO CREDOR, FAVOR OBTER ASSINATURA DOS 02 REPRESENTANTES (CREDOR), POIS A REPRESENTAÇÃO SE FAZ COM A ASSINATURA EM CONJUNTO DE DOIS PROCURADORES.",
+      "FALTA MATRÍCULA - FAVOR INDEXAR A MATRÍCULA ATUALIZADA WITH TODAS AS AVERBAÇÕES E REGISTROS DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER BRASIL) S/A.",
+      "CONSTA APENAS 01 ASSINATURA NO CAMPO CREDOR, FAVOR OBTER ASSINATURA DOS 02 REPRESENTANTES (CREDOR), POIS A REPRESENTAÇÃO SE FAZ WITH A ASSINATURA EM CONJUNTO DE DOIS PROCURADORES.",
       "IDENTIFICAMOS UMA DIVERGÊNCIA ENTRE O VALOR DO SEU FINANCIAMENTO REGISTRADO EM CONTRATO E O VALOR CONSTANTE NA MATRÍCULA DO IMÓVEL.",
       "PARA REGULARIZAR ESTA SITUAÇÃO E GARANTIR QUE TODOS OS SEUS DADOS ESTEJAM CORRETOS, FAVOR LEVAR A MATRÍCULA AO RGI PARA CORREÇÃO NO REGISTRO Nº XX.",
       "OBSERVAR QUE FALTOU OS DADOS DE UM DOS QUALIFICADOS (XX) NA MATRÍCULA, FAVOR LEVAR AO CARTÓRIO PARA CORREÇÃO.",
       "FALTOU O FORMULÁRIO 1704, FAVOR PROVIDENCIAR O FORMULÁRIO 1704 DEVIDAMENTE ASSINADO, A ASSINATURA DO FORMULÁRIO PRECISA SER IGUAL A ASSINATURA DO CONTRATO REGISTRADO",
       "SOLICITAMOS PROVIDENCIAR O FORMULÁRIO 1704, POR TRATAR DE PAGAMENTO AO PROCURADOR, O QUAL ESTÁ QUALIFICADO EM CONTRATO, PARA VALIDAÇÃO DOS DADOS BANCÁRIOS. SOLICITAMOS QUE SEJA PREENCHIDO NO CAMPO DO PROCURADOR O NOME DO PROCURADOR E SEU CPF. OBS: A ASSINATURA DO FORMULÁRIO PRECISA SER IGUAL A ASSINATURA DO CONTRATO REGISTRADO.",
-      "PROCURAÇÃO VENCIDA, FAVOR PROVIDENCIAR UMA NOVA PROCURAÇÃO/SUBSTABELECIMENTO COM PRAZO VIGENTE DE 90 DIAS CONTADOS A PARTIR DA DATA DE EMISSÃO.",
-      "FALTOU A GUIA PARA PAGAMENTO, FAVOR PROVIDENCIAR A GUIA DE PAGAMENTO EM VICENDAS COM ID PARA PROVIDENCIARMOS O PAGAMENTO.",
-      "GUIA VENCIDA, FAVOR PROVIDENCIAR A GUIA DE PAGAMENTO EM VICENDAS COM ID PARA PROVIDENCIARMOS O PAGAMENTO.",
-      "GUIA ERRADA, FAVOR PROVIDENCIAR A GUIA CORRETA DE PAGAMENTO EM VICENDAS COM ID PARA PROVIDENCIARMOS O PAGAMENTO.",
-      "GUIA SEM Nº DE ID, FAVOR PROVIDENCIAR A GUIA DE PAGAMENTO EM VICENDAS COM ID PARA PROVIDENCIARMOS O PAGAMENTO.",
+      "PROCURAÇÃO VENCIDA, FAVOR PROVIDENCIAR UMA NOVA PROCURAÇÃO/SUBSTABELECIMENTO WITH PRAZO VIGENTE DE 90 DIAS CONTADOS A PARTIR DA DATA DE EMISSÃO.",
+      "FALTOU A GUIA PARA PAGAMENTO, FAVOR PROVIDENCIAR A GUIA DE PAGAMENTO EM VICENDAS WITH ID PARA PROVIDENCIARMOS O PAGAMENTO.",
+      "GUIA VENCIDA, FAVOR PROVIDENCIAR A GUIA DE PAGAMENTO EM VICENDAS WITH ID PARA PROVIDENCIARMOS O PAGAMENTO.",
+      "GUIA ERRADA, FAVOR PROVIDENCIAR A GUIA CORRETA DE PAGAMENTO EM VICENDAS WITH ID PARA PROVIDENCIARMOS O PAGAMENTO.",
+      "GUIA SEM Nº DE ID, FAVOR PROVIDENCIAR A GUIA DE PAGAMENTO EM VICENDAS WITH ID PARA PROVIDENCIARMOS O PAGAMENTO.",
       "O CONTRATO INDEXADO NÃO PERTENCE A PROPOSTA, FAVOR INDEXAR O CONTRATO XX PARA PROSSEGUIRMOS.",
       "A MATRÍCULA INDEXADA NÃO PERTECE A PROPOSTA, FAVOR INDEXAR A MATRÍCULA XX PARA PROSSEGUIRMOS.",
-      "PREZADOS PRENOTAÇÃO ANEXADA, AGUARDANDO CORREÇÃO. APÓS ANEXAR CONTRATO REGISTRADO CORRIGIDO E MATRÍCULA ATUALIZADA COM TODAS AS AVERBAÇÕES E REGISTRO DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER ATUAREMOS NA CONFERÊNCIA DE REGISTRO."
+      "PREZADOS PRENOTAÇÃO ANEXADA, AGUARDANDO CORREÇÃO. APÓS ANEXAR CONTRATO REGISTRADO CORRIGIDO E MATRÍCULA ATUALIZADA WITH TODAS AS AVERBAÇÕES E REGISTRO DE COMPRA, VENDA E ALIENAÇÃO AO BANCO SANTANDER ATUAREMOS NA CONFERÊNCIA DE REGISTRO."
     ]
   },
   {
@@ -182,7 +194,7 @@ PREZADOS, REALIZADA A VALIDAÇÃO DO CONTRATO REGISTRADO, OS DOCUMENTOS APRESENT
 
 REGISTRO DA ALIENAÇÃO FIDUCIÁRIA DO IMÓVEL A FAVOR DO BANCO SANTANDER, SOB O Nº R- XX.
 
-DADOS BANCÁRIOS NO SISTEMA AG C/C DE ACORDO COM CONTRATO REGISTRADO.`
+DADOS BANCÁRIOS NO SISTEMA AG C/C DE ACORDO WITH CONTRATO REGISTRADO.`
       },
       {
         label: 'Aquisição',
@@ -193,13 +205,13 @@ PARA CONFERÊNCIA TOTAL DO REGISTRO DO CONTRATO E POSTERIOR ENVIO PARA LIBERAÇ�
 
 APÓS DISPONIBILIZAÇÃO DA CERTIDÃO, A PROPOSTA SERÁ AVANÇADA.*
 
-PREZADOS, REALIZADA A VALIDAÇÃO DO CONTRATO REGISTRADO, OS DOCUMENTOS APRESENTADOS ESTÃO DE ACORDO COM AS DEFINIÇÕES DO BANCO SANTANDER.
+PREZADOS, REALIZADA A VALIDAÇÃO DO CONTRATO REGISTRADO, OS DOCUMENTOS APRESENTADOS ESTÃO DE ACORDO WITH AS DEFINIÇÕES DO BANCO SANTANDER.
 
-REGISTRO DA COMPRA E VENDA DO IMÓVEL COM OS DADOS CORRETOS, SOB O N º R- XX.
+REGISTRO DA COMPRA E VENDA DO IMÓVEL WITH OS DADOS CORRETOS, SOB O N º R- XX.
 
 REGISTRO DA ALIENAÇÃO FIDUCIÁRIA DO IMÓVEL A FAVOR DO BANCO SANTANDER, SOB O Nº R- XX.
 
-DADOS BANCÁRIOS NO SISTEMA AG C/C DE ACORDO COM CONTRATO REGISTRADO.`
+DADOS BANCÁRIOS NO SISTEMA AG C/C DE ACORDO WITH CONTRATO REGISTRADO.`
       }
     ]
   },
@@ -212,26 +224,26 @@ DADOS BANCÁRIOS NO SISTEMA AG C/C DE ACORDO COM CONTRATO REGISTRADO.`
       {
         label: 'CP',
         value: 'cp',
-        message: `SITE DA ARISP INDISPONIVEL. NÃO SENDO POSSIVEL SEGUIR COM A APROVAÇÃO DA CONFERÊNCIA DE REGISTRO.
+        message: `SITE DA ARISP INDISPONIVEL. NÃO SENDO POSSIVEL SEGUIR WITH A APROVAÇÃO DA CONFERÊNCIA DE REGISTRO.
 
-PREZADOS, REALIZADA A VALIDAÇÃO DO CONTRATO REGISTRADO, OS DOCUMENTOS APRESENTADOS ESTÃO DE ACORDO COM AS DEFINIÇÕES DO BANCO SANTANDER.
+PREZADOS, REALIZADA A VALIDAÇÃO DO CONTRATO REGISTRADO, OS DOCUMENTOS APRESENTADOS ESTÃO DE ACORDO WITH AS DEFINIÇÕES DO BANCO SANTANDER.
 
 REGISTRO DA ALIENAÇÃO FIDUCIÁRIA DO IMÓVEL A FAVOR DO BANCO SANTANDER, SOB O Nº R- XX.
 
-DADOS BANCÁRIOS NO SISTEMA AG C/C DE ACORDO COM CONTRATO REGISTRADO.`
+DADOS BANCÁRIOS NO SISTEMA AG C/C DE ACORDO WITH CONTRATO REGISTRADO.`
       },
       {
         label: 'Aquisição',
         value: 'aquisicao',
-        message: `SITE DA ARISP INDISPONIVEL. NÃO SENDO POSSIVEL SEGUIR COM A APROVAÇÃO DA CONFERÊNCIA DE REGISTRO.
+        message: `SITE DA ARISP INDISPONIVEL. NÃO SENDO POSSIVEL SEGUIR WITH A APROVAÇÃO DA CONFERÊNCIA DE REGISTRO.
 
-PREZADOS, REALIZADA A VALIDAÇÃO DO CONTRATO REGISTRADO, OS DOCUMENTOS APRESENTADOS ESTÃO DE ACORDO COM AS DEFINIÇÕES DO BANCO SANTANDER.
+PREZADOS, REALIZADA A VALIDAÇÃO DO CONTRATO REGISTRADO, OS DOCUMENTOS APRESENTADOS ESTÃO DE ACORDO WITH AS DEFINIÇÕES DO BANCO SANTANDER.
 
-REGISTRO DA COMPRA E VENDA DO IMÓVEL COM OS DADOS CORRETOS, SOB O N º R- XX.
+REGISTRO DA COMPRA E VENDA DO IMÓVEL WITH OS DADOS CORRETOS, SOB O N º R- XX.
 
 REGISTRO DA ALIENAÇÃO FIDUCIÁRIA DO IMÓVEL A FAVOR DO BANCO SANTANDER, SOB O Nº R- XX.
 
-DADOS BANCÁRIOS NO SISTEMA AG C/C DE ACORDO COM CONTRATO REGISTRADO.`
+DADOS BANCÁRIOS NO SISTEMA AG C/C DE ACORDO WITH CONTRATO REGISTRADO.`
       }
     ]
   },
@@ -241,7 +253,7 @@ DADOS BANCÁRIOS NO SISTEMA AG C/C DE ACORDO COM CONTRATO REGISTRADO.`
     title: 'COMPROVANTE PADRÃO',
     category: 'general',
     subtitle: 'CONFIRMAÇÃO DE PAGAMENTO',
-    message: `PAGAMENTO REALIZADO COM SUCESSO.
+    message: `PAGAMENTO REALIZADO WITH SUCESSO.
 
 SEGUE EM ANEXO O COMPROVANTE DE TRANSFERÊNCIA BANCÁRIA REFERENTE AO CONTRATO Nº [NÚMERO].
 
@@ -259,7 +271,7 @@ VALOR: R$ [VALOR]`
       body: `Financeiro, bom dia!
 
 
-Favor seguir com o pagamento manual para o procurador conforme formulário 1704, procuração e contrato registrado anexos.
+Favor seguir with o pagamento manual para o procurador conforme formulário 1704, procuração e contrato registrado anexos.
 
 
 OBS.: Após aprovação, nos retornar para o avanço da fase. Gentileza “ flegar” pagamento manual.`
@@ -275,12 +287,12 @@ OBS.: Após aprovação, nos retornar para o avanço da fase. Gentileza “ fleg
       subject: 'CONTINGÊNCIA | PROPOSTA XX.XXX.XXX | PAGAMENTO POR GUIA JUDICIAL | ESPÓLIO DE XXXXXX XXXXX XXXXXX | PROCESSO XXXXXXXXXXXXXXXXXXXX',
       body: `Financeiro, bom dia!
 
-Favor seguir com o pagamento referente ESPÓLIO DE MARINA DUARTE DO PRADO, via GUIA JUDICIAL anexa.
+Favor seguir with o pagamento referente ESPÓLIO DE MARINA DUARTE DO PRADO, via GUIA JUDICIAL anexa.
 
 Processo: 10063570620208260704
 ID 081020000179580929.
 
-A guia judicial anexa está com o vencimento para 18/09/2025.
+A guia judicial anexa está with o vencimento para 18/09/2025.
 
 OBS.: Após aprovação, nos retornar para o avanço da fase. Gentileza “ flegar” pagamento manual.
 
@@ -300,7 +312,7 @@ Grato.`
 A proposta informada, apresentou INDISPONIBILIDADE DE BENS conforme AV nº xx na matrícula XX.XXX (no anexo) portanto aguardamos um parecer para prosseguirmos neste caso. 
 
 
-No anexo, segue a matrícula com informação constante na mesma. 
+No anexo, segue a matrícula with informação constante na mesma. 
  
 Informamos que a proposta se encontra em pausa para avanço até a segunda ordem.`
     }
@@ -384,13 +396,11 @@ function App() {
     else setActiveTemplateId(null);
   };
 
-  const renderCategoryIcon = (icon: any, title: string, className: string = "size-8") => {
-    if (typeof icon === 'string') {
-      // Força o ícone externo a ser branco puro usando filtro CSS
-      return <img src={icon} alt={title} className={`${className} object-contain brightness-0 invert`} />;
+  const renderCategoryIcon = (IconObj: any, title: string, className: string = "size-7") => {
+    if (typeof IconObj === 'string') {
+      return <img src={IconObj} alt={title} className={`${className} object-contain brightness-0 invert`} />;
     }
-    const IconComponent = icon;
-    return <IconComponent className={`${className} text-white`} />;
+    return <IconObj className={`${className} text-white`} />;
   };
 
   return (
@@ -448,24 +458,24 @@ function App() {
 
         {!selectedCategory && !searchQuery && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="mb-8 text-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-              <h2 className="text-2xl font-bold text-red-600 uppercase mb-2">Comentário Banco</h2>
-              <p className="text-slate-700 font-medium">Selecione o tipo de produto para acessar os modelos.</p>
+            <div className="mb-8 text-center bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+              <h2 className="text-xl font-bold text-red-600 uppercase mb-1">Comentário Banco</h2>
+              <p className="text-slate-600 text-sm font-medium">Selecione o tipo de produto para acessar os modelos.</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {CATEGORIES.map((cat) => {
                 return (
                   <button 
                     key={cat.id} 
                     onClick={() => selectCategory(cat.id)} 
-                    className="group bg-red-600 p-6 rounded-xl shadow-md border-2 border-transparent hover:bg-red-700 hover:shadow-xl transition-all text-left flex items-center gap-6 duration-300"
+                    className="group bg-red-600 p-3.5 rounded-xl shadow-md border-2 border-transparent hover:bg-red-700 hover:shadow-xl transition-all text-center flex flex-col items-center gap-2.5 duration-300 min-h-[140px]"
                   >
-                    <div className="p-4 rounded-xl bg-red-600 group-hover:scale-110 transition-all duration-300 flex items-center justify-center min-w-[80px] min-h-[80px]">
-                      {renderCategoryIcon(cat.icon, cat.title, "size-10 md:size-12")}
+                    <div className="p-2.5 rounded-lg bg-red-600 shadow-inner group-hover:scale-110 transition-all duration-300 flex items-center justify-center">
+                      {renderCategoryIcon(cat.icon, cat.title, "size-8 md:size-9")}
                     </div>
                     <div>
-                      <h3 className="font-bold text-white text-lg">{cat.title}</h3>
-                      <p className="text-sm text-red-100 mt-1 leading-relaxed">{cat.description}</p>
+                      <h3 className="font-bold text-white text-xs md:text-sm uppercase tracking-tight leading-tight">{cat.title}</h3>
+                      <p className="text-[10px] text-red-100 mt-1 leading-tight line-clamp-2 opacity-80">{cat.description}</p>
                     </div>
                   </button>
                 );
@@ -504,7 +514,7 @@ function App() {
               <div className="mb-6">
                 <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
                   <div className="p-3 bg-red-600 rounded-lg shadow-sm flex items-center justify-center min-w-[56px] min-h-[56px]">
-                    {renderCategoryIcon(activeCategoryData.icon, activeCategoryData.title, "size-8 md:size-10")}
+                    {renderCategoryIcon(activeCategoryData.icon, activeCategoryData.title, "size-8 md:size-9")}
                   </div>
                   {activeCategoryData.title}
                 </h2>
@@ -573,14 +583,14 @@ function App() {
                   </ul>
                   <h4 className="text-lg font-bold text-red-800 border-b border-red-100 pb-1 mb-3 mt-6">ESTADO CIVIL</h4>
                   <ul className="list-disc pl-5 space-y-1 text-slate-600">
-                    <li><strong>Solteiro:</strong> Checar união estável. Estrangeiro precisa de RNE/Passaporte com visto.</li>
+                    <li><strong>Solteiro:</strong> Checar união estável. Estrangeiro precisa de RNE/Passaporte with visto.</li>
                     <li><strong>Casado:</strong> Pacto antenupcial se Comunhão Universal (após 1977) ou Separação Total.</li>
                   </ul>
                 </div>
                 <div>
                    <h4 className="text-lg font-bold text-red-800 border-b border-red-100 pb-1 mb-3">IMÓVEL</h4>
                   <ul className="list-disc pl-5 space-y-1 text-slate-600">
-                    <li><strong>Matrícula:</strong> Em nome dos vendedores, com averbação da construção. Válida por 30 dias.</li>
+                    <li><strong>Matrícula:</strong> Em nome dos vendedores, with averbação da construção. Válida por 30 dias.</li>
                     <li><strong>IPTU:</strong> Ano vigente ou anterior. Inscrição imobiliária conferida.</li>
                     <li><strong>Certidão de Tributos:</strong> Válida por 90 dias se não houver prazo expresso.</li>
                   </ul>
