@@ -38,7 +38,7 @@ const CATEGORIES: Category[] = [
   {
     id: 'arisp',
     title: 'ARISP / CERTIDÕES',
-    icon: Medal,
+    icon: 'https://ridigital.org.br/assets/img/header/logo-header.svg',
     color: 'bg-red-600',
     description: 'Solicitações e validações de certidões digitais.'
   },
@@ -178,7 +178,7 @@ PARA CONFERÊNCIA TOTAL DO REGISTRO DO CONTRATO E POSTERIOR ENVIO PARA LIBERAÇ�
 
 APÓS DISPONIBILIZAÇÃO DA CERTIDÃO, A PROPOSTA SERÁ AVANÇADA.*
 
-PREZADOS, REALIZADA A VALIDAÇÃO DO CONTRATO REGISTRADO, OS DOCUMENTOS APRESENTADOS ESTÃO DE ACORDO COM AS DEFINIÇÕES DO BANCO SANTANDER.
+PREZADOS, REALIZADA A VALIDAÇÃO DO CONTRATO REGISTRADO, OS DOCUMENTOS APRESENTADOS ESTÃO DE ACORDO WITH AS DEFINIÇÕES DO BANCO SANTANDER.
 
 REGISTRO DA ALIENAÇÃO FIDUCIÁRIA DO IMÓVEL A FAVOR DO BANCO SANTANDER, SOB O Nº R- XX.
 
@@ -384,6 +384,15 @@ function App() {
     else setActiveTemplateId(null);
   };
 
+  const renderCategoryIcon = (icon: any, title: string, className: string = "size-8") => {
+    if (typeof icon === 'string') {
+      // Força o ícone externo a ser branco puro usando filtro CSS
+      return <img src={icon} alt={title} className={`${className} object-contain brightness-0 invert`} />;
+    }
+    const IconComponent = icon;
+    return <IconComponent className={`${className} text-white`} />;
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 pb-20 font-sans relative selection:bg-red-100 selection:text-red-900">
       <header className="bg-red-600 sticky top-0 z-20 shadow-md transition-colors">
@@ -439,21 +448,24 @@ function App() {
 
         {!selectedCategory && !searchQuery && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="mb-8 text-center bg-white p-6 rounded-2xl shadow-sm">
+            <div className="mb-8 text-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
               <h2 className="text-2xl font-bold text-red-600 uppercase mb-2">Comentário Banco</h2>
               <p className="text-slate-700 font-medium">Selecione o tipo de produto para acessar os modelos.</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {CATEGORIES.map((cat) => {
-                const Icon = cat.icon;
                 return (
-                  <button key={cat.id} onClick={() => selectCategory(cat.id)} className="group bg-red-600 p-6 rounded-xl shadow-md hover:bg-red-700 hover:shadow-xl transition-all text-left flex items-start gap-4 duration-300">
-                    <div className="p-3 rounded-lg bg-white/10 text-white shadow-inner group-hover:scale-110 transition-transform duration-300">
-                      <Icon size={24} />
+                  <button 
+                    key={cat.id} 
+                    onClick={() => selectCategory(cat.id)} 
+                    className="group bg-red-600 p-6 rounded-xl shadow-md border-2 border-transparent hover:bg-red-700 hover:shadow-xl transition-all text-left flex items-center gap-6 duration-300"
+                  >
+                    <div className="p-4 rounded-xl bg-red-600 group-hover:scale-110 transition-all duration-300 flex items-center justify-center min-w-[80px] min-h-[80px]">
+                      {renderCategoryIcon(cat.icon, cat.title, "size-10 md:size-12")}
                     </div>
                     <div>
                       <h3 className="font-bold text-white text-lg">{cat.title}</h3>
-                      <p className="text-sm text-white/80 mt-1 leading-relaxed">{cat.description}</p>
+                      <p className="text-sm text-red-100 mt-1 leading-relaxed">{cat.description}</p>
                     </div>
                   </button>
                 );
@@ -491,8 +503,8 @@ function App() {
             <div className="flex-1 animate-in slide-in-from-right-8 duration-300">
               <div className="mb-6">
                 <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
-                  <div className="p-2 bg-red-600 text-white rounded-lg shadow-sm">
-                    <activeCategoryData.icon size={24} />
+                  <div className="p-3 bg-red-600 rounded-lg shadow-sm flex items-center justify-center min-w-[56px] min-h-[56px]">
+                    {renderCategoryIcon(activeCategoryData.icon, activeCategoryData.title, "size-8 md:size-10")}
                   </div>
                   {activeCategoryData.title}
                 </h2>
@@ -506,7 +518,7 @@ function App() {
                     const Icon = template.category === 'approval' ? CheckCircle : (template.category === 'rejection' ? XCircle : FileText);
                     const colorClass = isActive 
                       ? (template.category === 'approval' ? "bg-green-600 text-white" : "bg-red-600 text-white")
-                      : "bg-white text-slate-700 hover:bg-slate-50";
+                      : "bg-white text-slate-700 hover:bg-slate-50 border border-slate-200";
 
                     return (
                       <button
