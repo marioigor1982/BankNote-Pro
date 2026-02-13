@@ -76,7 +76,7 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({ template, onDelete }
     if (upper.includes('CONTRATO')) return 12;
     if (upper.includes('REGISTRO Nº')) return 8;
     if (upper.includes('R-')) return 3;
-    if (upper.includes('CERTIDÃO DIGITAL')) return 12;
+    if (upper.includes('CERTIDÃO DIGITAL')) return 20;
     return undefined;
   };
 
